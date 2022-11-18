@@ -12,7 +12,30 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "my-box"
+  config.vm.box = "windows10_vmware"
+  config.vm.communicator = "winrm"
+
+  # WinRM username and password
+  config.winrm.username = "sap_admin"
+  config.winrm.password = "1qaz2wsx!QAZ@WSX"
+
+  config.vm.guest = :windows
+  config.windows.halt_timeout = 15
+
+  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+
+  config.vm.provider :vmware_workstation do |v, override|
+	v.gui = true
+	v.vmx["memsize"] = "2048"
+	v.vmx["numvcpus"] = "2"
+	v.vmx["ethernet0.virtualDev"] = "vmxnet3"
+	v.vmx["RemoteDisplay.vnc.enabled"] = "false"
+	v.vmx["RemoteDisplay.vnc.port"] = "5900"
+	v.vmx["scsi0.virtualDev"] = "lsisas1068"
+	v.enable_vmrun_ip_lookup = false
+	v.whitelist_verified = true
+	v.vmx["hgfs.linkRootShare"] = "FALSE"
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
