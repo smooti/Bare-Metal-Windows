@@ -153,7 +153,7 @@
                     <Description>Enable AutoLogon</Description>
                 </SynchronousCommand>
 				<SynchronousCommand wcm:action="add">
-					<CommandLine>cmd.exe /c a:\Enable-Updates.bat</CommandLine>
+					<CommandLine>powershell.exe -File "a:\Enable-Updates.ps1"</CommandLine>
 					<Order>9</Order>
 					<Description>Enable Microsoft Updates</Description>
 				</SynchronousCommand>
