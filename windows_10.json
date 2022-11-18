@@ -13,8 +13,8 @@
                 "{{user `autounattend`}}",
 				"./Scripts/Set-NetworkTypeToPrivate.ps1",
 				"./Scripts/ConfigureWinRM.ps1",
-                "./Scripts/Enable-Updates.ps1",
-				"./Scripts/Get-Updates.ps1"
+                "./Scripts/Enable-WindowsUpdates.ps1",
+				"./Scripts/Get-WindowsUpdates.ps1"
             ],
             "guest_os_type": "windows9-64",
             "headless": "{{user `headless`}}",
