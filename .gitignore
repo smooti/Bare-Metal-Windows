@@ -5,6 +5,4 @@
 
 packer_cache
 
-VirtDrivers/*
-
 Distros/*
