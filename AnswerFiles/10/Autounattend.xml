@@ -115,13 +115,13 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -File "a:\Set-NetworkTypeToPrivate.ps1"</CommandLine>
+                    <CommandLine>powershell -File "a:\Set-NetworkTypeToPrivate.ps1"</CommandLine>
                     <Description>Set network to private</Description>
                     <Order>3</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -File "a:\ConfigureWinRM.ps1"</CommandLine>
+                    <CommandLine>powershell -File "a:\ConfigureWinRM.ps1"</CommandLine>
                     <Description>Enable WinRM</Description>
                     <Order>4</Order>
                     <RequiresUserInput>true</RequiresUserInput>
@@ -145,11 +145,6 @@
                     <CommandLine>%SystemRoot%\System32\reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f</CommandLine>
                     <Order>8</Order>
                     <Description>Enable AutoLogon</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell.exe -Command "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force"</CommandLine>
-                    <Order>9</Order>
-                    <Description>Install nuget to talk to nuget repos</Description>
                 </SynchronousCommand>
             </FirstLogonCommands>
         </component>
