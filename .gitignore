@@ -1,0 +1,10 @@
+# All box files
+*.box
+
+.vagrant
+
+packer_cache
+
+VirtDrivers/*
+
+Distros/*
