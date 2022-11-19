@@ -44,18 +44,25 @@ build {
   sources = ["source.vmware-iso.vm"]
 
   provisioner "powershell" {
+	inline = [
+		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart"
+	]
+  }
+
+  provisioner "powershell" {
 	scripts = [
+		"./Scripts/Debloat-Windows.ps1",
 		"./Scripts/Install-VMwareTools.ps1"
 	]
   }
 
-  provisioner "windows-update" {
-	search_criteria = "IsInstalled=0"
-  }
+#   provisioner "windows-update" {
+# 	search_criteria = "IsInstalled=0"
+#   }
 
   post-processor "vagrant" {
     keep_input_artifact  = false
-    output               = "windows10_{{ .Provider }}.box"
+    output               = "win10_{{ .Provider }}.box"
     vagrantfile_template = "VagrantFile"
   }
 }
