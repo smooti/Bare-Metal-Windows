@@ -8,14 +8,14 @@ variable "disk_size" {
   default = "61440"
 }
 
-variable "disk_type_id" {
-  type    = string
-  default = "1"
-}
-
 variable "headless" {
   type    = string
   default = "false"
+}
+
+variable "guest_os_type" {
+  type    = string
+  default = "windows9-64"
 }
 
 variable "iso_checksum" {
