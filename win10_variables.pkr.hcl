@@ -65,7 +65,7 @@ variable "winrm_password" {
 
 variable "winrm_timeout" {
   type    = string
-  default = "6h"
+  default = "3h"
 }
 
 variable "winrm_username" {

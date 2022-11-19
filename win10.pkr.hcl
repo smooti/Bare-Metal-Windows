@@ -20,11 +20,12 @@ source "vmware-iso" "vm"{
 	"./Scripts/ConfigureWinRM.ps1"
 	]
   guest_os_type     = "windows9-64"
+  network 			= "nat"
   headless          = "${var.headless}"
   iso_checksum      = "${var.iso_checksum}"
   iso_url           = "${var.iso_url}"
   memory            = "${var.memory}"
-  shutdown_command  = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
+  shutdown_command  = "shutdown /s /t 10 /f /d p:4:1"
   version           = "${var.vmx_version}"
   vm_name           = "${var.vm_name}"
   vmx_data = {
@@ -48,7 +49,7 @@ build {
 
   provisioner "powershell" {
 	scripts = [
-		"./Scripts/Install-VmwareTools.ps1"
+		"./Scripts/Install-VMwareTools.ps1"
 	]
   }
 
