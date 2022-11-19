@@ -43,14 +43,14 @@ source "vmware-iso" "vm"{
 build {
   sources = ["source.vmware-iso.vm"]
 
-#   provisioner "windows-update" {
-# 	search_criteria = "IsInstalled=0"
-#   }
-
   provisioner "powershell" {
 	scripts = [
 		"./Scripts/Install-VMwareTools.ps1"
 	]
+  }
+
+  provisioner "windows-update" {
+	search_criteria = "IsInstalled=0"
   }
 
   post-processor "vagrant" {
