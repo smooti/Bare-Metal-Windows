@@ -6,3 +6,5 @@
 packer_cache
 
 Distros/*
+
+output-vm
