@@ -8,4 +8,4 @@ $vmToolslocalFile = "$env:UserProfile\Downloads\$vmToolsExeName"
 
 Invoke-Webrequest -Uri $vmToolsDlUrl -OutFile $vmToolslocalFile -UseBasicParsing
 & $vmToolslocalFile /S /v/qn REBOOT=R
-Remove-Item $vmToolslocalFile -Force
+# Remove-Item $vmToolslocalFile -Force
