@@ -81,13 +81,6 @@ build {
 	]
   }
 
-  # Run DscConfiguration
-  provisioner "powershell" {
-	inline = [
-		"Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
-	]
-  }
-
 #   # NOTE: Currently not being used until able to resolve Windows 10 DSC settings issues.
 #   # Setup for DSC script
 #   provisioner "file" {
@@ -103,6 +96,13 @@ build {
 		# "./Scripts/Debloat-Windows.ps1",
 		"./Scripts/Install-VMwareTools.ps1"
 		# "./DSC/Harden-System.ps1"
+	]
+  }
+
+  # Run DscConfiguration
+  provisioner "powershell" {
+	inline = [
+		"Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
 	]
   }
 
