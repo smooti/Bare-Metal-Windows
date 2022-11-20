@@ -37,7 +37,7 @@ Configuration Windows10Stig
 
 	Node $NodeName
 	{
-		# FIXME: Some settings overlap with edge causing issues with applying DSC
+		# # FIXME: Some settings overlap with microsoft edge causing issues with applying DSC
 		# InternetExplorer InternetExplorerSettings {
 		# 	BrowserVersion = $ieVersion
 		# 	Stigversion    = $ieStigVersion
@@ -74,4 +74,4 @@ Configuration Windows10Stig
 
 Windows10Stig -OutputPath $PSScripRoot
 
-Start-DscConfiguration -Path "$env:UserProfile\Windows10Stig" -Wait -Force
+Start-DscConfiguration -Path $PSScripRoot -Wait -Force
