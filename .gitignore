@@ -3,6 +3,8 @@
 
 .vagrant
 
+DSC
+
 packer_cache
 
 Distros/*
