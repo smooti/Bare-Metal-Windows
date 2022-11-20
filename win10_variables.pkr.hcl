@@ -1,6 +1,6 @@
 variable "autounattend" {
   type    = string
-  default = "./AnswerFiles/10/autounattend.xml"
+  default = "./Answers/10/autounattend.xml"
 }
 
 variable "disk_size" {
@@ -41,11 +41,6 @@ variable "restart_timeout" {
 variable "vhv_enable" {
   type    = string
   default = "false"
-}
-
-variable "virtio_win_iso" {
-  type    = string
-  default = "./VirtDrivers/virtio-win-0.1.225.iso"
 }
 
 variable "vm_name" {
