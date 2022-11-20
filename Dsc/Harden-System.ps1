@@ -72,6 +72,4 @@ Configuration Windows10Stig
 	}
 }
 
-Windows10Stig -OutputPath $PSScripRoot
-
-Start-DscConfiguration -Path $PSScripRoot -Wait -Force
+Windows10Stig | Out-Null
