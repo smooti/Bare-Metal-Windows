@@ -31,10 +31,10 @@ Configuration Windows10Stig
 
 	Node $NodeName
 	{
-		InternetExplorer InternetExplorerSettings {
-			BrowserVersion = $ieVersion
-			Stigversion    = $ieStigVersion
-		}
+		# InternetExplorer InternetExplorerSettings {
+		# 	BrowserVersion = $ieVersion
+		# 	Stigversion    = $ieStigVersion
+		# }
 
 		WindowsClient WindowsSettings {
 			OsVersion   = $winClientVersion
@@ -62,6 +62,6 @@ Configuration Windows10Stig
 	}
 }
 
-Windows10Stig -OutputPath ".\Dsc\"
+Windows10Stig -OutputPath "..\Dsc\"
 
-Start-DscConfiguration -Path ".\Dsc" -Wait -Verbose
+Start-DscConfiguration -Path "..\Dsc" -Wait -Force
