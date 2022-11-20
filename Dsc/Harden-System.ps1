@@ -37,6 +37,7 @@ Configuration Windows10Stig
 
 	Node $NodeName
 	{
+		# FIXME: Some settings overlap with edge causing issues with applying DSC
 		# InternetExplorer InternetExplorerSettings {
 		# 	BrowserVersion = $ieVersion
 		# 	Stigversion    = $ieStigVersion
@@ -60,15 +61,17 @@ Configuration Windows10Stig
 			StigVersion = $defenderStigVersion
 		}
 
-		WindowsClient WindowsSettings {
-			OsVersion   = $winClientVersion
-			Stigversion = $winClientStigVersion
-			SkipRule    = @('V-220704', 'V-220903', 'V-220905', 'V-220906')
-			OrgSettings = '.\Settings\WindowsClient-10.org.default.xml'
-		}
+		# # FIXME: Tries to restart 'secondary logon service' and errors out causing failed build
+		# # NOTE: Packer uses the 'secondary logon service' along with 'winRM' to send commands to the image
+		# WindowsClient WindowsSettings {
+		# 	OsVersion   = $winClientVersion
+		# 	Stigversion = $winClientStigVersion
+		# 	SkipRule    = @('V-220704', 'V-220903', 'V-220905', 'V-220906')
+		# 	OrgSettings = "$PSScriptRoot\Settings\WindowsClient-10.org.default.xml"
+		# }
 	}
 }
 
-Windows10Stig
+Windows10Stig -OutputPath $PSScripRoot
 
-Start-DscConfiguration -Path './' -Wait -Force
+Start-DscConfiguration -Path "$env:UserProfile\Windows10Stig" -Wait -Force

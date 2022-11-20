@@ -75,11 +75,19 @@ build {
 	]
   }
 
+  # NOTE: Currently not being used until able to resolve Windows 10 DSC settings issues.
+  # Setup for DSC script
+  provisioner "file" {
+    source = "DSC/Settings"
+    destination = "C:/windows/Temp"
+}
+
+
   # Run scripts
   provisioner "powershell" {
 	scripts = [
-		"./Scripts/Debloat-Windows.ps1",
-		"./Scripts/Install-VMwareTools.ps1",
+		# "./Scripts/Debloat-Windows.ps1",
+		# "./Scripts/Install-VMwareTools.ps1",
 		"./DSC/Harden-System.ps1"
 	]
   }
