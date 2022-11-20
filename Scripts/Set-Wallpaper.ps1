@@ -28,7 +28,8 @@ Function Set-Wallpaper {
 		[string]$Style = 'Center'
 	)
 
-	$systemWallpaperPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
+	$systemWallpaperPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\'
+	# $systemWallpaperPath = 'HKCU:\\Control Panel\\Desktop\\'	# NOTE: This will set wallpaper for current user only
 	$wallpaperStyle = Switch ($Style) {
 		'Center' { '0' }
 		'Tile' { '1' }
@@ -75,4 +76,4 @@ namespace Win32{
 	[Win32.Wallpaper]::SetWallpaper($Image)
 }
 
-Set-Wallpaper -Image C:\windows\web\Wallpaper\wallpaper.png -Style Center
+Set-Wallpaper -Image C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png -Style Fill
