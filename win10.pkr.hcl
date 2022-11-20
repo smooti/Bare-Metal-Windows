@@ -81,7 +81,7 @@ build {
 	]
   }
 
-#   # NOTE: Currently not being used until able to resolve Windows 10 DSC settings issues.
+#   # FIXME: Currently not being used until able to resolve Windows 10 client DSC config issues.
 #   # Setup for DSC script
 #   provisioner "file" {
 #     source = "DSC/Settings"
@@ -93,9 +93,9 @@ build {
   provisioner "powershell" {
 	scripts = [
 		"./Scripts/Set-Wallpaper.ps1",
-		# "./Scripts/Debloat-Windows.ps1",
+		"./Scripts/Debloat-Windows.ps1",
 		"./Scripts/Install-VMwareTools.ps1"
-		# "./DSC/Harden-System.ps1"
+		"./DSC/Harden-System.ps1"
 	]
   }
 
@@ -106,10 +106,10 @@ build {
 	]
   }
 
-#   # Update Windows
-#   provisioner "windows-update" {
-# 	search_criteria = "IsInstalled=0"
-#   }
+  # Update Windows
+  provisioner "windows-update" {
+	search_criteria = "IsInstalled=0"
+  }
 
   # Creat vagrant box
   post-processor "vagrant" {
