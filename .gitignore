@@ -5,6 +5,7 @@
 DSC/*
 
 !DSC/Settings
+!DSC/Settings/Harden-System.ps1
 
 packer_cache
 
