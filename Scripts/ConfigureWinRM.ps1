@@ -4,6 +4,7 @@ Enable-PSRemoting -Force
 # Configure winRM
 winrm quickconfig -q
 winrm quickconfig -transport:http
+winrm set winrm/config '@{MaxEnvelopeSizekb="4000"}'
 winrm set winrm/config '@{MaxTimeoutms="1800000"}'
 winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="800"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'

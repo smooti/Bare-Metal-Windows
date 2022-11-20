@@ -60,8 +60,8 @@ build {
   # Grab required modules
   provisioner "powershell" {
 	inline = [
-		"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force"	# Grab NuGet provider to interact with NuGet-based repositories
-		"Install-Module PSDscResources -Force"
+		"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force",	# Grab NuGet provider to interact with NuGet-based repositories
+		"Install-Module PSDscResources -Force",
 		"Install-Module PowerStig -SkipPublisherCheck -Force"
 	]
   }
