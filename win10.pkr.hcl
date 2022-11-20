@@ -43,17 +43,19 @@ source "vmware-iso" "vm"{
   floppy_files      = [ # NOTE The autounattend file must be specified
 	"${var.autounattend}",
   	"./Scripts/Set-NetworkTypeToPrivate.ps1",
-	"./Scripts/ConfigureWinRM.ps1"
+	"./Scripts/Set-WinRMSettings.ps1"
   ]
 }
 
 build {
   sources = ["source.vmware-iso.vm"]
 
-  # Disable internet explorer
+  # Disable internet explorer & cortana
   provisioner "powershell" {
 	inline = [
-		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart"
+		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart",
+		"New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\' -Name 'Windows Search' | Out-Null",
+		"New-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null"
 	]
   }
 
