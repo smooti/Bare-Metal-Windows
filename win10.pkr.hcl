@@ -53,7 +53,7 @@ build {
   # Disable internet explorer & cortana
   provisioner "powershell" {
 	inline = [
-		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart",
+		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart | Out-Null",
 		"New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\' -Name 'Windows Search' | Out-Null",
 		"New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null"
 	]
@@ -75,12 +75,12 @@ build {
 	]
   }
 
-  # NOTE: Currently not being used until able to resolve Windows 10 DSC settings issues.
-  # Setup for DSC script
-  provisioner "file" {
-    source = "DSC/Settings"
-    destination = "C:/windows/Temp"
-}
+#   # NOTE: Currently not being used until able to resolve Windows 10 DSC settings issues.
+#   # Setup for DSC script
+#   provisioner "file" {
+#     source = "DSC/Settings"
+#     destination = "C:/windows/Temp"
+#   }
 
 
   # Run scripts
