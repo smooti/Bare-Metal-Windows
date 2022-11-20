@@ -70,8 +70,8 @@ build {
 
   # Upload wallpaper
   provisioner "file" {
-    source = "Floppy/wallpaper.png"
-    destination = "C:/windows/web/wallpaper.png"
+    source = "Floppy/APL-Wallpapers"
+    destination = "C:/windows/web/Wallpaper"
   }
 
   # Update help information

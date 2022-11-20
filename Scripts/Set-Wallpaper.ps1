@@ -75,4 +75,4 @@ namespace Win32{
 	[Win32.Wallpaper]::SetWallpaper($Image)
 }
 
-Set-Wallpaper -Image C:\windows\web\wallpaper.png -Style Center
+Set-Wallpaper -Image C:\windows\web\Wallpaper\wallpaper.png -Style Center
