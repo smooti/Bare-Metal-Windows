@@ -80,7 +80,7 @@ build {
 	scripts = [
 		"./Scripts/Debloat-Windows.ps1",
 		"./Scripts/Install-VMwareTools.ps1",
-		"./Scripts/Enforce-Dsc.ps1"
+		"./Scripts/Harden-System.ps1"
 	]
   }
 
