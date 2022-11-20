@@ -2,8 +2,9 @@
 *.box
 
 .vagrant
+DSC/*
 
-DSC
+!DSC/Settings
 
 packer_cache
 
