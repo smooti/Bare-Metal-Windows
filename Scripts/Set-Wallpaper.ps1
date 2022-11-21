@@ -28,7 +28,7 @@ Function Set-Wallpaper {
 		[string]$Style = 'Center'
 	)
 
-	$systemWallpaperPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\'
+	$systemWallpaperPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
 	# $systemWallpaperPath = 'HKCU:\\Control Panel\\Desktop\\'	# NOTE: This will set wallpaper for current user only
 	$wallpaperStyle = Switch ($Style) {
 		'Center' { '0' }
@@ -46,7 +46,7 @@ Function Set-Wallpaper {
 	}
 
 	if (!(Test-Path $systemWallpaperPath)) {
-		New-Item $systemWallpaperPath | Out-Null
+		New-Item $systemWallpaperPath -Force | Out-Null
 	}
 
 	# Add registry entries for system wide wallpaper
@@ -76,4 +76,4 @@ namespace Win32{
 	[Win32.Wallpaper]::SetWallpaper($Image)
 }
 
-Set-Wallpaper -Image C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png -Style Fill
+Set-Wallpaper -Image 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png' -Style Fill
