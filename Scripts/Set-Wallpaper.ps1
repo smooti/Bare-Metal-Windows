@@ -98,5 +98,5 @@ namespace Win32{
 	
 }
 
-Set-Wallpaper -WallpaperImage 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png' -Style Fill -System
-Set-Wallpaper -LockScreenImage 'C:\windows\web\Wallpaper\APL-Wallpapers\lockscreen.png'
+Set-Wallpaper -WallpaperImage 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.jpg' -Style Fill -System
+Set-Wallpaper -LockScreenImage 'C:\windows\web\Wallpaper\APL-Wallpapers\lockscreen.jpg'
