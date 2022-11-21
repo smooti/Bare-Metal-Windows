@@ -30,7 +30,7 @@ variable "iso_url" {
 
 variable "memory" {
   type    = string
-  default = "2048"
+  default = "6192"
 }
 
 variable "restart_timeout" {
