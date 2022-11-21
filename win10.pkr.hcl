@@ -34,13 +34,14 @@ source "vmware-iso" "vm"{
 
   # Machine information
   vm_name           = "${var.vm_name}"
-  cpus              = 4
+  cpus              = "${var.cpu}"
   memory            = "${var.memory}"
   disk_adapter_type = "lsisas1068"
   disk_size         = "${var.disk_size}"
   guest_os_type     = "${var.guest_os_type}"
   headless          = "${var.headless}"
-  floppy_files      = [ # NOTE The autounattend file must be specified
+  # NOTE The autounattend file must be specified
+  floppy_files      = [
 	"${var.autounattend}",
   	"./Floppy/Set-NetworkTypeToPrivate.ps1",
 	"./Floppy/Set-WinRMSettings.ps1"
@@ -50,16 +51,16 @@ source "vmware-iso" "vm"{
 build {
   sources = ["source.vmware-iso.vm"]
 
-  # Update Windows
-  # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
-  provisioner "windows-update" {
-	search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-	filters = [
-      "exclude:$_.Title -like '*Preview*'",
-      "include:$true"
-    ]
-    update_limit = 25
-  }
+#   # Update Windows
+#   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
+#   provisioner "windows-update" {
+# 	search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+# 	filters = [
+#       "exclude:$_.Title -like '*Preview*'",
+#       "include:$true"
+#     ]
+#     update_limit = 25
+#   }
 
   # Disable internet explorer & cortana
   provisioner "powershell" {
@@ -75,8 +76,9 @@ build {
   provisioner "powershell" {
 	inline = [
 		"Write-Host 'Installing required packages...'",
-		"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force",	# Grab NuGet provider to interact with NuGet-based repositories
+		"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null",	# Grab NuGet provider to interact with NuGet-based repositories
 		"Install-Module PSDscResources -Force",
+		"Install-Module -Name VMWare.PowerCLI -SkipPublisherCheck -Force",
 		"Install-Module PowerStig -SkipPublisherCheck -Force"
 	]
   }
@@ -109,6 +111,7 @@ build {
 		"./Scripts/Set-Wallpaper.ps1",
 		"./Scripts/Debloat-Windows.ps1",
 		"./Scripts/Install-VMwareTools.ps1",
+		"./Scripts/Set-TLSSecureConfig.ps1",
 		"./DSC/Harden-System.ps1"
 	]
   }

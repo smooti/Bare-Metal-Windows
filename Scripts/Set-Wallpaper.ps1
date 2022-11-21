@@ -5,56 +5,66 @@ Function Set-Wallpaper {
 		.SYNOPSIS
 		Applies a specified wallpaper to the current user's desktop
 		
-		.PARAMETER Image
-		Provide the exact path to the image
+		.PARAMETER WallpaperImage
+		Path to desktop wallpaper
 	 
 		.PARAMETER Style
 		Provide wallpaper style (Example: Fill, Fit, Stretch, Tile, Center, or Span)
+
+		.PARAMETER LockScreenImage
+		Path to lock screen wallpaper
 	  
 		.EXAMPLE
-		Set-WallPaper -Image "C:\Wallpaper\Default.jpg"
-		Set-WallPaper -Image "C:\Wallpaper\Background.jpg" -Style Fit
+		Set-WallPaper -WallpaperImage "C:\Wallpaper\Default.jpg"
+		Set-WallPaper -WallpaperImage "C:\Wallpaper\Background.jpg" -Style Fit
+		Set-Wallpaper -LockScreenImage "C:\LockScreen\Default.jpg"
 	  
 	#>
 	
 	 
 	param (
-		[parameter(Mandatory = $True)]
-		# Provide path to image
-		[string]$Image,
-		# Provide wallpaper style that you would like applied
+		[parameter(Mandatory = $False)]
+		[string]$WallpaperImage,
+
 		[parameter(Mandatory = $False)]
 		[ValidateSet('Fill', 'Fit', 'Stretch', 'Tile', 'Center', 'Span')]
-		[string]$Style = 'Center'
+		[string]$Style = 'Center',
+
+		[parameter(Mandatory = $False)]
+		[string]$LockScreenImage,
+
+		[parameter(Mandatory = $False)]
+		[switch]$System
 	)
 
-	$systemWallpaperPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
-	# $systemWallpaperPath = 'HKCU:\\Control Panel\\Desktop\\'	# NOTE: This will set wallpaper for current user only
-	$wallpaperStyle = Switch ($Style) {
-		'Center' { '0' }
-		'Tile' { '1' }
-		'Stretch' { '2' }
-		'Fit' { '3' }
-		'Fill' { '4' }
-		'Span' { '5' }
+	if ($WallpaperImage) {
+		if ($System) {
+			$regKeyPath = 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System'
+		}
+		else {
+			$regKeyPath = 'HKCU:\\Control Panel\\Desktop\\'	# NOTE: This will set wallpaper for current user only
+		}
+
+		$wallpaperStyle = Switch ($Style) {
+			'Center' { '0' }
+			'Tile' { '1' }
+			'Stretch' { '2' }
+			'Fit' { '3' }
+			'Fill' { '4' }
+			'Span' { '5' }
 	  
-	}
+		}
 
-	$value = 0
-	If ($Style -eq 'Tile') {
-		$value = 1
-	}
+		# Check if key exists, if not create it
+		if (!(Test-Path $regKeyPath)) {
+			New-Item $regKeyPath | Out-Null
+		}
 
-	if (!(Test-Path $systemWallpaperPath)) {
-		New-Item $systemWallpaperPath -Force | Out-Null
-	}
+		# Add registry entries for system wide wallpaper
+		New-ItemProperty -Path $regKeyPath -Name Wallpaper -PropertyType String -Value $WallpaperImage -Force | Out-Null
+		New-ItemProperty -Path $regKeyPath -Name WallpaperStyle -PropertyType String -Value $wallpaperStyle -Force | Out-Null
 
-	# Add registry entries for system wide wallpaper
-	New-ItemProperty -Path $systemWallpaperPath -Name Wallpaper -PropertyType String -Value $Image -Force | Out-Null
-	New-ItemProperty -Path $systemWallpaperPath -Name WallpaperStyle -PropertyType String -Value $wallpaperStyle -Force | Out-Null
-	New-ItemProperty -Path $systemWallpaperPath -Name TileWallpaper -PropertyType String -Value $value -Force | Out-Null
-
-	$code = @' 
+		$code = @' 
 using System.Runtime.InteropServices; 
 namespace Win32{ 
     
@@ -69,11 +79,24 @@ namespace Win32{
  } 
 '@
 
-	# Add .NET type to session
-	Add-Type $code 
+		# Add .NET type to session
+		Add-Type $code 
 
-	#Apply the Change on the system 
-	[Win32.Wallpaper]::SetWallpaper($Image)
+		#Apply the Change on the system without logging out user
+		[Win32.Wallpaper]::SetWallpaper($WallpaperImage)
+	}
+
+	if ($LockScreenImage) {
+		$regKeyPath = 'HKLM:\\Software\\Policies\\Microsoft\\Windows\\Personalization'
+		# Check if key exists, if not create it
+		if (!(Test-Path $regKeyPath)) {
+			New-Item $regKeyPath | Out-Null
+		}
+
+		New-ItemProperty -Path $regKeyPath -Name LockScreenImage -Value $LockScreenImage | Out-Null
+	}
+	
 }
 
-Set-Wallpaper -Image 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png' -Style Fill
+Set-Wallpaper -WallpaperImage 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.png' -Style Fill -System
+Set-Wallpaper -LockScreenImage 'C:\windows\web\Wallpaper\APL-Wallpapers\lockscreen.png'

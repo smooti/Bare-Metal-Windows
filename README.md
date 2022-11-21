@@ -9,6 +9,8 @@
 
 ## Testing
 
+Initialize packer template `packer init .\win10.pkr.hcl`
+
 Build image with `packer build .`
 
 Deploy vagrant box
