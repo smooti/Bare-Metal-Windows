@@ -20,26 +20,6 @@ variable "vm_name" {
   default = "win10Ref"
 }
 
-variable "guest_os_type" {
-  type    = string
-  default = "windows9-64"
-}
-
-variable "cpu" {
-  type    = string
-  default = "4"
-}
-
-variable "memory" {
-  type    = string
-  default = "6192"
-}
-
-variable "disk_size" {
-  type    = string
-  default = "61440"
-}
-
 # Other information
 variable "headless" {
   type    = string

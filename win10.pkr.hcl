@@ -34,11 +34,11 @@ source "vmware-iso" "vm"{
 
   # Machine information
   vm_name           = "${var.vm_name}"
-  cpus              = "${var.cpu}"
-  memory            = "${var.memory}"
+  cpus              = 4
+  memory            = 6192
   disk_adapter_type = "lsisas1068"
-  disk_size         = "${var.disk_size}"
-  guest_os_type     = "${var.guest_os_type}"
+  disk_size         = 61440
+  guest_os_type     = "windows9-64"
   headless          = "${var.headless}"
   # NOTE The autounattend file must be specified
   floppy_files      = [
