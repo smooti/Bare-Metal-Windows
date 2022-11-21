@@ -34,7 +34,7 @@ source "vmware-iso" "vm"{
 
   # Machine information
   vm_name           = "${var.vm_name}"
-  cpus              = 2
+  cpus              = 4
   memory            = "${var.memory}"
   disk_adapter_type = "lsisas1068"
   disk_size         = "${var.disk_size}"
@@ -50,10 +50,22 @@ source "vmware-iso" "vm"{
 build {
   sources = ["source.vmware-iso.vm"]
 
+  # Update Windows
+  # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
+  provisioner "windows-update" {
+	search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+	filters = [
+      "exclude:$_.Title -like '*Preview*'",
+      "include:$true"
+    ]
+    update_limit = 25
+  }
+
   # Disable internet explorer & cortana
   provisioner "powershell" {
 	inline = [
-		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart | Out-Null",
+		"Write-Host 'Disabling Internet Explorer and Cortana...'",
+		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart",
 		"New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\' -Name 'Windows Search' | Out-Null",
 		"New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null"
 	]
@@ -62,9 +74,18 @@ build {
   # Grab required modules
   provisioner "powershell" {
 	inline = [
+		"Write-Host 'Installing required packages...'",
 		"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force",	# Grab NuGet provider to interact with NuGet-based repositories
 		"Install-Module PSDscResources -Force",
 		"Install-Module PowerStig -SkipPublisherCheck -Force"
+	]
+  }
+
+  # Update help information
+  provisioner "powershell" {
+	inline = [
+		"Write-Host 'Grabbing latest help files...'",
+		"Update-Help -UICulture en-us -ErrorAction Ignore -Force"
 	]
   }
 
@@ -72,13 +93,6 @@ build {
   provisioner "file" {
     source = "Floppy/APL-Wallpapers"
     destination = "C:/windows/web/Wallpaper"
-  }
-
-  # Update help information
-  provisioner "powershell" {
-	inline = [
-		"Update-Help -UICulture en-us -ErrorAction Ignore -Force"
-	]
   }
 
 #   # FIXME: Currently not being used until able to resolve Windows 10 client DSC config issues.
@@ -102,13 +116,9 @@ build {
   # Run DscConfiguration
   provisioner "powershell" {
 	inline = [
+		"Write-Host 'Initiating DSC configuration...'",
 		"Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
 	]
-  }
-
-  # Update Windows
-  provisioner "windows-update" {
-	search_criteria = "IsInstalled=0"
   }
 
   # Creat vagrant box
