@@ -84,7 +84,7 @@ build {
   # Update help information
   provisioner "powershell" {
 	inline = [
-		"Write-Host 'Grabbing latest help files...'",
+		"Write-Host 'Grabbing latest help files for powershell modules...'",
 		"Update-Help -UICulture en-us -ErrorAction Ignore -Force"
 	]
   }
