@@ -51,6 +51,28 @@ source "vmware-iso" "vm" {
 build {
   sources = ["source.vmware-iso.vm"]
 
+  # Upload wallpapers
+  provisioner "file" {
+    source      = "Floppy/APL-Wallpapers"
+    destination = "C:/windows/web/Wallpaper"
+  }
+
+  # Apply custom images
+  provisioner "powershell" {
+    scripts = [
+      "./Scripts/Set-Wallpaper.ps1",
+      "./Scripts/Set-UserImage.ps1"
+    ]
+  }
+
+  # Force default user account image
+  provisioner "powershell" {
+    inline = [
+      "Write-Host 'INFO: Setting default user account image...'",
+      "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer' -Name 'UseDefaultTile' -PropertyType DWORD -Value '1' | Out-Null"
+    ]
+  }
+
   #   # Update Windows
   #   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
   #   provisioner "windows-update" {
@@ -91,12 +113,6 @@ build {
   #     ]
   #   }
 
-  # Upload wallpapers
-  provisioner "file" {
-    source      = "Floppy/APL-Wallpapers"
-    destination = "C:/windows/web/Wallpaper"
-  }
-
   #   # FIXME: Currently not being used until able to resolve Windows 10 client DSC config issues.
   #   # Setup for DSC script
   #   provisioner "file" {
@@ -104,24 +120,13 @@ build {
   #     destination = "C:/windows/Temp"
   #   }
 
-
   # Run scripts
   provisioner "powershell" {
     scripts = [
-      "./Scripts/Set-Wallpaper.ps1",
-      "./Scripts/Set-UserImage.ps1",
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Install-VMwareTools.ps1",
       "./Scripts/Set-TLSSecureConfig.ps1",
       "./DSC/Harden-System.ps1"
-    ]
-  }
-
-  # Force default user account image
-  provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Setting default user account image...'",
-      "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer' -Name 'UseDefaultTile' -PropertyType DWORD -Value '1' | Out-Null"
     ]
   }
 
