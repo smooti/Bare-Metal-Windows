@@ -13,6 +13,12 @@ Function Set-Wallpaper {
 
 		.PARAMETER LockScreenImage
 		Path to lock screen wallpaper
+
+		.PARAMETER System
+		Locks background from being changed
+
+		.PARAMETER AllUsers
+		Sets default background for all users
 	  
 		.EXAMPLE
 		Set-WallPaper -WallpaperImage "C:\Wallpaper\Default.jpg"
@@ -34,7 +40,10 @@ Function Set-Wallpaper {
 		[string]$LockScreenImage,
 
 		[parameter(Mandatory = $False)]
-		[switch]$System
+		[switch]$System,
+
+		[parameter(Mandatory = $False)]
+		[switch]$AllUsers
 	)
 
 	if ($WallpaperImage) {
@@ -43,6 +52,14 @@ Function Set-Wallpaper {
 		}
 		else {
 			$regKeyPath = 'HKCU:\\Control Panel\\Desktop\\'	# NOTE: This will set wallpaper for current user only
+		}
+
+		if ($AllUsers) {
+			takeown /f "$env:windir\WEB\wallpaper\Windows\img0.jpg"
+			icacls "$env:windir\WEB\wallpaper\Windows\img0.jpg" /Grant 'System:(F)'
+			Rename-Item "$env:windir\WEB\wallpaper\Windows\img0.jpg.bkp"
+			Copy-Item $WallpaperImage "$env:windir\WEB\wallpaper\Windows\img0.jpg"
+			exit
 		}
 
 		$wallpaperStyle = Switch ($Style) {
@@ -98,5 +115,5 @@ namespace Win32{
 	
 }
 
-Set-Wallpaper -WallpaperImage 'C:\windows\web\Wallpaper\APL-Wallpapers\wallpaper.jpg' -Style Fill -System
-Set-Wallpaper -LockScreenImage 'C:\windows\web\Wallpaper\APL-Wallpapers\lockscreen.jpg'
+Set-Wallpaper -WallpaperImage '$env:windir\web\Wallpaper\APL-Wallpapers\wallpaper.jpg' -AllUsers
+Set-Wallpaper -LockScreenImage '$env:windir\web\Wallpaper\APL-Wallpapers\lockscreen.jpg'

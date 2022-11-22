@@ -34,10 +34,10 @@ source "vmware-iso" "vm"{
 
   # Machine information
   vm_name           = "${var.vm_name}"
-  cpus              = 4
-  memory            = 6192
+  cpus              = "4"
+  memory            = "6192"
   disk_adapter_type = "lsisas1068"
-  disk_size         = 61440
+  disk_size         = "61440"
   guest_os_type     = "windows9-64"
   headless          = "${var.headless}"
   # NOTE The autounattend file must be specified
@@ -66,7 +66,7 @@ build {
   provisioner "powershell" {
 	inline = [
 		"Write-Host 'Disabling Internet Explorer and Cortana...'",
-		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart",
+		"Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart | Out-Null",
 		"New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\' -Name 'Windows Search' | Out-Null",
 		"New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null"
 	]
@@ -91,7 +91,7 @@ build {
 	]
   }
 
-  # Upload wallpaper
+  # Upload wallpapers
   provisioner "file" {
     source = "Floppy/APL-Wallpapers"
     destination = "C:/windows/web/Wallpaper"
