@@ -56,10 +56,9 @@ Function Set-Wallpaper {
 
 		if ($AllUsers) {
 			takeown /f "$env:windir\WEB\wallpaper\Windows\img0.jpg"
-			icacls "$env:windir\WEB\wallpaper\Windows\img0.jpg" /Grant 'System:(F)'
-			Rename-Item "$env:windir\WEB\wallpaper\Windows\img0.jpg.bkp"
-			Copy-Item $WallpaperImage "$env:windir\WEB\wallpaper\Windows\img0.jpg"
-			exit
+			icacls "$env:windir\WEB\wallpaper\Windows\img0.jpg" /Grant "$($env:UserName):(F)"
+			Rename-Item -Path "$env:windir\WEB\wallpaper\Windows\img0.jpg" -NewName 'img0.jpg.bkp'
+			Copy-Item -Path $WallpaperImage -Destination "$env:windir\WEB\wallpaper\Windows\img0.jpg"
 		}
 
 		$wallpaperStyle = Switch ($Style) {
@@ -115,5 +114,5 @@ namespace Win32{
 	
 }
 
-Set-Wallpaper -WallpaperImage '$env:windir\web\Wallpaper\APL-Wallpapers\wallpaper.jpg' -AllUsers
-Set-Wallpaper -LockScreenImage '$env:windir\web\Wallpaper\APL-Wallpapers\lockscreen.jpg'
+Set-Wallpaper -WallpaperImage "$env:windir\web\Wallpaper\APL-Wallpapers\wallpaper.jpg" -AllUsers
+Set-Wallpaper -LockScreenImage "$env:windir\web\Wallpaper\APL-Wallpapers\lockscreen.jpg"
