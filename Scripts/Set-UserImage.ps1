@@ -19,14 +19,18 @@ function Set-UserImage {
 
 	)
 
-	$defaultImagePath = "$env:programdata\Microsoft\User Account Pictures\user.bmp"
+	$defaultImagePath = "$env:programdata\Microsoft\User Account Pictures"
 	# Take ownership of image and grant full control
 	# NOTE: This is normally owned by 'Trusted Installer'
 	takeown /f $defaultImagePath
 	icacls $defaultImagePath /Grant "$($env:UserName):(F)"
 
 	# Backup old image and set new image
-	Rename-Item -Path $defaultImagePath -NewName 'user.bmp.bkp'
+	$imageName = $defaultImagePath.split('\')
+	if (Test-Path "$defaultImagePath\$($imageName[-1])" -PathType Leaf) {
+		Rename-Item -Path "$defaultImagePath\$($imageName[-1])" -NewName "$($imageName[-1]).bkp"
+	}
+
 	Copy-Item -Path $UserImage -Destination $defaultImagePath
 }
 

@@ -117,6 +117,14 @@ build {
     ]
   }
 
+  # Force default user account image
+  provisioner "powershell" {
+    inline = [
+      "Write-Host 'INFO: Setting default user account image...'",
+      "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer' -Name 'UseDefaultTile' -PropertyType DWORD -Value '1' | Out-Null"
+    ]
+  }
+
   # Run DscConfiguration
   provisioner "powershell" {
     inline = [
