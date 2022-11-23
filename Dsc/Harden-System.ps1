@@ -64,10 +64,9 @@ Configuration Windows10Stig
 		# FIXME: Tries to restart 'secondary logon service' and errors out causing failed build
 		# NOTE: Packer uses the 'secondary logon service' along with 'winRM' to send commands to the image
 		WindowsClient WindowsSettings {
-			OsVersion   = $winClientVersion
-			Stigversion = $winClientStigVersion
-			SkipRule    = @('V-220704', 'V-220903', 'V-220905', 'V-220906', 'V-220862', 'V-220865', 'V-220866', 'V-220863', 'V-220868', 'V-220732') #NOTE Skip certificate installation
-			OrgSettings = "$PSScriptRoot\Settings\WindowsClient-10.org.default.xml"
+			OsVersion    = $winClientVersion
+			Stigversion  = $winClientStigVersion
+			SkipRule     = @('V-220704', 'V-220903', 'V-220905', 'V-220906', 'V-220862', 'V-220865', 'V-220866', 'V-220863', 'V-220868', 'V-220732') #NOTE Skip certificate installation
 			SkipRuleType = @('UserRightRule')
 		}
 	}
