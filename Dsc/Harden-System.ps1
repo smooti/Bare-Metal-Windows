@@ -68,7 +68,7 @@ Configuration Windows10Stig
 			Stigversion = $winClientStigVersion
 			SkipRule    = @('V-220704', 'V-220903', 'V-220905', 'V-220906', 'V-220862', 'V-220865', 'V-220866', 'V-220863', 'V-220868', 'V-220732') #NOTE Skip certificate installation
 			OrgSettings = "$PSScriptRoot\Settings\WindowsClient-10.org.default.xml"
-			SkipRuleType = @('WindowsFeatureRule', 'AccountPolicyRule')
+			SkipRuleType = @('UserRightRule')
 		}
 	}
 }
