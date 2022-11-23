@@ -123,7 +123,7 @@ build {
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Install-VMwareTools.ps1",
       "./Scripts/Set-TLSSecureConfig.ps1",
-      "./DSC/Harden-System.ps1"
+      "./Scripts/Generate-STIG.ps1"
     ]
   }
 
