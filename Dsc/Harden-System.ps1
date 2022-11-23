@@ -66,7 +66,18 @@ Configuration Windows10Stig
 		WindowsClient WindowsSettings {
 			OsVersion    = $winClientVersion
 			Stigversion  = $winClientStigVersion
-			SkipRule     = @('V-220704', 'V-220903', 'V-220905', 'V-220906', 'V-220862', 'V-220865', 'V-220866', 'V-220863', 'V-220868', 'V-220732') #NOTE Skip certificate installation
+			SkipRule     = @(
+				'V-220704',
+				'V-220903', # NOTE: Skip certificate installation
+				'V-220905', # NOTE: Skip certificate installation
+				'V-220906', # NOTE: Skip certificate installation
+				'V-220862',
+				'V-220865',
+				'V-220866',
+				'V-220863',
+				'V-220868',
+				'V-220732'
+			)
 			SkipRuleType = @('UserRightRule')
 		}
 	}
