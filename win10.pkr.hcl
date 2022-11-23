@@ -98,9 +98,13 @@ build {
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Installing required packages...'",
+      "Write-Host 'INFO: Installing NuGet Package...'",
       "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null", # Grab NuGet provider to interact with NuGet-based repositories
+      "Write-Host 'INFO: Installing PSDscResources...'",
       "Install-Module PSDscResources -Force",
+      "Write-Host 'INFO: Installing VMWare Power CLI...'",
       "Install-Module -Name VMWare.PowerCLI -SkipPublisherCheck -Force",
+      "Write-Host 'INFO: Installing PowerStig...'",
       "Install-Module PowerStig -SkipPublisherCheck -Force"
     ]
   }
