@@ -46,8 +46,8 @@ Configuration Windows10Stig
 		Edge MSEdge {
 			StigVersion = $edgeStigVersion
 			SkipRule    = @(
-				'V-235719',
-				'V-235752' #NOTE: Default is '2' which blocks almost all downloads
+				'V-235719', # NOTE: User control of proxy settings must be disabled
+				'V-235752' # NOTE: Default is '2' which blocks almost all downloads
 			)
 		}
 
@@ -70,16 +70,16 @@ Configuration Windows10Stig
 			OsVersion    = $winClientVersion
 			Stigversion  = $winClientStigVersion
 			SkipRule     = @(
-				'V-220704',
+				'V-220704', # NOTE: Use Bitlocker pin
 				'V-220903', # NOTE: Skip certificate installation
 				'V-220905', # NOTE: Skip certificate installation
 				'V-220906', # NOTE: Skip certificate installation
-				'V-220862',
-				'V-220865',
-				'V-220866',
-				'V-220863',
-				'V-220868',
-				'V-220732'
+				'V-220862', # NOTE: WinRM client basic authentication
+				'V-220865', # NOTE: WinRM service basic authentication
+				'V-220866', # NOTE: WinRM service unencrypted traffic
+				'V-220863', # NOTE: WinRM client unencrypted traffic
+				'V-220868', # NOTE: WinRM client disgest authentication
+				'V-220732'  # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
 			)
 			SkipRuleType = @('UserRightRule')
 		}
