@@ -113,13 +113,6 @@ build {
   #     ]
   #   }
 
-  # FIXME: Currently not being used until able to resolve Windows 10 client DSC config issues.
-  # Setup for DSC script
-  provisioner "file" {
-    source      = "DSC/Settings"
-    destination = "C:/windows/Temp"
-  }
-
   # Run scripts
   provisioner "powershell" {
     scripts = [
