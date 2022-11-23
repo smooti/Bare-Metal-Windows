@@ -45,7 +45,10 @@ Configuration Windows10Stig
 
 		Edge MSEdge {
 			StigVersion = $edgeStigVersion
-			SkipRule    = @('V-235719')
+			SkipRule    = @(
+				'V-235719',
+				'V-235752' #NOTE: Default is '2' which blocks almost all downloads
+			)
 		}
 
 		DotNetFramework DotNetFrameworkSettings {
