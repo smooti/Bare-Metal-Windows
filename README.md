@@ -22,3 +22,11 @@ vagrant box add --name <VMname> <myImage.box>
 # Start vagrant box
 vagrant up
 ```
+
+---
+
+**Note**
+
+Due to how sysprep is implemented the built in 'Administrator' and 'Guest' account will always be renamed to their default 'values'.
+
+---
