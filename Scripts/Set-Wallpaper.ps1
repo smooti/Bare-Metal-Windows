@@ -114,5 +114,5 @@ namespace Win32{
 	
 }
 
-Set-Wallpaper -WallpaperImage "$env:windir\web\Wallpaper\APL-Wallpapers\wallpaper.jpg" -AllUsers
-Set-Wallpaper -LockScreenImage "$env:windir\web\Wallpaper\APL-Wallpapers\lockscreen.jpg"
+Set-Wallpaper -WallpaperImage "$env:windir\web\Wallpaper\APL-Wallpapers\wallpaper.jpg" -AllUsers | Out-Null
+Set-Wallpaper -LockScreenImage "$env:windir\web\Wallpaper\APL-Wallpapers\lockscreen.jpg" | Out-Null
