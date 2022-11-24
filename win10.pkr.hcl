@@ -94,6 +94,14 @@ build {
     ]
   }
 
+  # Turn off weather and news on taskbar
+  provisioner "powershell" {
+    inline = [
+      "Write-Host 'INFO: Turning off weather and news on taskbar...'",
+      "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Feeds' -Name 'ShellFeedsTaskbarViewMode' -Value '2' "
+    ]
+  }
+
   # Grab required modules
   provisioner "powershell" {
     inline = [

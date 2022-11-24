@@ -46,9 +46,9 @@ Configuration Windows10Stig
 		Edge MSEdge {
 			StigVersion = $edgeStigVersion
 			SkipRule    = @(
-				'V-235719', # NOTE: User control of proxy settings must be disabled
-				'V-235752' # NOTE: Default is '2' which blocks almost all downloads
+				'V-235719' # NOTE: User control of proxy settings must be disabled
 			)
+			Exception = @{'V-235752'= @{'ValueData'='1'} } # NOTE: Default is '2' which blocks almost all downloads
 		}
 
 		DotNetFramework DotNetFrameworkSettings {
@@ -78,10 +78,11 @@ Configuration Windows10Stig
 				'V-220865', # NOTE: WinRM service basic authentication
 				'V-220866', # NOTE: WinRM service unencrypted traffic
 				'V-220863', # NOTE: WinRM client unencrypted traffic
-				'V-220868', # NOTE: WinRM client disgest authentication
-				'V-220732'  # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
+				# 'V-220868', # NOTE: WinRM client disgest authentication
+				'V-220732', # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
+				'V-220968'  # NOTE: Prevents local admin from remote access
 			)
-			SkipRuleType = @('UserRightRule')
+			# SkipRuleType = @('UserRightRule')
 		}
 	}
 }
