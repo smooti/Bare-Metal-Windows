@@ -75,7 +75,7 @@ Configuration Windows10Stig
 				'V-220905', # NOTE: Skip certificate installation
 				'V-220906', # NOTE: Skip certificate installation
 				'V-220732', # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
-				'V-220968'  # NOTE: Prevents local admin from remote access
+				'V-220968'  # NOTE: Prevents local admin from remote access (This must be enabled for packer to finish)
 			)
 			# SkipRuleType = @('UserRightRule')
 		}
