@@ -129,7 +129,8 @@ build {
   provisioner "powershell" {
     scripts = [
       "./Scripts/Debloat-Windows.ps1",
-      "./Scripts/Install-VMwareTools.ps1",
+	  "./Scripts/Uninstall-OneDrive.ps1"
+      #   "./Scripts/Install-VMwareTools.ps1",
       "./Scripts/Set-TLSSecureConfig.ps1",
       "./Scripts/Generate-STIG.ps1"
     ]
