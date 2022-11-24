@@ -48,8 +48,48 @@ source "vmware-iso" "vm" {
   ]
 }
 
+source "virtualbox-iso" "vm" {
+  # Required vars
+  iso_checksum = "${var.iso_checksum}"
+  iso_url      = "${var.iso_url}"
+
+  # WinRM connection information
+  communicator   = "winrm"
+  winrm_password = "${var.winrm_password}"
+  winrm_timeout  = "${var.winrm_timeout}"
+  winrm_username = "${var.winrm_username}"
+
+  # Allow vnc for debugging
+  # NOTE Used for remote deployments
+  vmx_data = {
+    "RemoteDisplay.vnc.enabled" = "false"
+    "RemoteDisplay.vnc.port"    = "5900"
+  }
+  vnc_port_max = 5980
+  vnc_port_min = 5900
+
+  # Optional vars
+  boot_wait                      = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  shutdown_command               = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
+  vmx_remove_ethernet_interfaces = true                            # NOTE Only used for building vagrant box images
+
+  # Machine information
+  vm_name       = "${var.vm_name}"
+  cpus          = "4"
+  memory        = "6192"
+  disk_size     = "61440"
+  guest_os_type = "Windows10_64"
+  headless      = "${var.headless}"
+  # NOTE The autounattend file must be specified
+  floppy_files = [
+    "${var.autounattend}",
+    "./Floppy/Set-NetworkTypeToPrivate.ps1",
+    "./Floppy/Set-WinRMSettings.ps1"
+  ]
+}
+
 build {
-  sources = ["source.vmware-iso.vm"]
+  sources = ["source.vmware-iso.vm", "source.virtualbox-iso.vm"]
 
   # Upload wallpapers
   provisioner "file" {
