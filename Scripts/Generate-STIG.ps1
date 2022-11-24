@@ -74,11 +74,6 @@ Configuration Windows10Stig
 				'V-220903', # NOTE: Skip certificate installation
 				'V-220905', # NOTE: Skip certificate installation
 				'V-220906', # NOTE: Skip certificate installation
-				'V-220862', # NOTE: WinRM client basic authentication
-				'V-220865', # NOTE: WinRM service basic authentication
-				'V-220866', # NOTE: WinRM service unencrypted traffic
-				'V-220863', # NOTE: WinRM client unencrypted traffic
-				# 'V-220868', # NOTE: WinRM client disgest authentication
 				'V-220732', # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
 				'V-220968'  # NOTE: Prevents local admin from remote access
 			)
