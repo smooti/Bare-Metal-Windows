@@ -64,7 +64,6 @@ Configuration Windows10Stig
 			StigVersion = $defenderStigVersion
 		}
 
-		# FIXME: Tries to restart 'secondary logon service' and errors out causing failed build
 		# NOTE: Packer uses the 'secondary logon service' along with 'winRM' to send commands to the image
 		WindowsClient WindowsSettings {
 			OsVersion    = $winClientVersion
