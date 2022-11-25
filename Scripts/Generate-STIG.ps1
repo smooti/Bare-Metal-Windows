@@ -35,6 +35,11 @@ Configuration Windows10Stig
 	$defenderStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'WindowsDefender' })[-1].Version
 	$defenderStigVersion = [string]($defenderStigVersionObj).Major + '.' + [string]($defenderStigVersionObj).Minor
 
+	# Microsoft defender version information
+	$acroReaderStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].Version
+	$acroReaderStigVersion = [string]($acroReaderStigVersionObj).Major + '.' + [string]($acroReaderStigVersionObj).Minor
+	$acroReaderVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].TechnologyVersion
+
 	Node $NodeName
 	{
 		# # FIXME: Some settings overlap with microsoft edge causing issues with applying DSC
@@ -48,7 +53,7 @@ Configuration Windows10Stig
 			SkipRule    = @(
 				'V-235719' # NOTE: User control of proxy settings must be disabled
 			)
-			Exception = @{'V-235752'= @{'ValueData'='1'} } # NOTE: Default is '2' which blocks almost all downloads
+			Exception   = @{'V-235752' = @{'ValueData' = '1' } } # NOTE: Default is '2' which blocks almost all downloads
 		}
 
 		DotNetFramework DotNetFrameworkSettings {
@@ -66,19 +71,30 @@ Configuration Windows10Stig
 
 		# NOTE: Packer uses the 'secondary logon service' along with 'winRM' to send commands to the image
 		WindowsClient WindowsSettings {
-			OsVersion    = $winClientVersion
-			Stigversion  = $winClientStigVersion
-			SkipRule     = @(
+			OsVersion   = $winClientVersion
+			Stigversion = $winClientStigVersion
+			SkipRule    = @(
 				'V-220704', # NOTE: Use Bitlocker pin
 				'V-220903', # NOTE: Skip certificate installation
 				'V-220905', # NOTE: Skip certificate installation
 				'V-220906', # NOTE: Skip certificate installation
 				'V-220732', # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
 				'V-220968', # NOTE: Prevents local admin from remote access (This must be enabled for packer to finish)
+				'V-220862', # NOTE: WinRM client basic auth (If not enabled vagrant will fail)
+				'V-220865', # NOTE: WinRM service basic auth (If not enabled vagrant will fail)
+				'V-220866', # NOTE: WinRM service unencrypted traffic (If not enabled vagrant will fail)
+				'V-220863', # NOTE: WinRM client unencrypted traffic (If not enabled vagrant will fail)
+				'V-220868', # NOTE: WinRM client Digest Authentication (If not enabled vagrant will fail)
+				'V-220867'  # NOTE: WinRM service run-as credentials (If not enabled vagrant will fail)
 				'V-220739', # FIXME: Skip lockout duration because keeps failing
 				'V-220740', # FIXME: Skip lockout threshold because keeps failing
 				'V-220741'  # FIXME: Skip Reset_account_lockout_counter because keeps failing
 			)
+		}
+		
+		Adobe AcrobatReaderSettings {
+			StigVersion = $acroReaderStigVersion
+			AdobeApp    = $acroReaderVersion
 		}
 	}
 }
