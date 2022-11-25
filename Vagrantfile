@@ -12,10 +12,11 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
+  config.vm.define "win10ref"
   config.vm.box = "win10_vmware.box"
-  config.vm.communicator = "winrm"
 
-  # WinRM username and password
+  # Communicator information
+  config.vm.communicator = "winrm"
   config.winrm.username = "sap_admin"
   config.winrm.password = "1qaz2wsx!QAZ@WSX"
 
