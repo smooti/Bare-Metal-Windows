@@ -131,7 +131,9 @@ build {
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Turning off weather and news on taskbar...'",
-      "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Feeds' -Name 'ShellFeedsTaskbarViewMode' -Value '2' "
+	  "Stop-Process -Name 'explorer' -Force",
+      "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Feeds' -Name 'ShellFeedsTaskbarViewMode' -Value '2'",
+	  "Start-Process 'explorer'"
     ]
   }
 
