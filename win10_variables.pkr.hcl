@@ -23,7 +23,7 @@ variable "vm_name" {
 # Other information
 variable "headless" {
   type    = string
-  default = "false"
+  default = "true"
 }
 
 variable "vhv_enable" {
