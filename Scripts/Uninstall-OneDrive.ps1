@@ -1,6 +1,6 @@
 Write-Output "Uninstalling OneDrive. Please wait."
     
-New-PSDrive  HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT
+New-PSDrive  HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null
 $onedrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
 $ExplorerReg1 = "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
 $ExplorerReg2 = "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
@@ -14,7 +14,7 @@ Start-Process $onedrive "/uninstall" -NoNewWindow -Wait
 Start-Sleep 2
 Write-Output "Stopping explorer"
 Start-Sleep 1
-.\taskkill.exe /F /IM explorer.exe
+Stop-Process -Name 'explorer' -Force
 Start-Sleep 3
 Write-Output "Removing leftover files"
 Remove-Item "$env:USERPROFILE\OneDrive" -Force -Recurse
@@ -25,12 +25,12 @@ If (Test-Path "$env:SYSTEMDRIVE\OneDriveTemp") {
 }
 Write-Output "Removing OneDrive from windows explorer"
 If (!(Test-Path $ExplorerReg1)) {
-	New-Item $ExplorerReg1
+	New-Item $ExplorerReg1 | Out-Null
 }
 Set-ItemProperty $ExplorerReg1 System.IsPinnedToNameSpaceTree -Value 0 
 If (!(Test-Path $ExplorerReg2)) {
-	New-Item $ExplorerReg2
+	New-Item $ExplorerReg2 | Out-Null
 }
 Set-ItemProperty $ExplorerReg2 System.IsPinnedToNameSpaceTree -Value 0
 Write-Output "Restarting Explorer that was shut down before."
-Start explorer.exe -NoNewWindow
+Start-Process 'explorer' -NoNewWindow
