@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.define "win10ref"
   config.vm.box = "win10_vmware.box"
+#   config.vm.synced_folder '.', '/vagrant', disabled: true
 
   # Communicator information
   config.vm.communicator = "winrm"
@@ -36,6 +37,16 @@ Vagrant.configure("2") do |config|
 	v.enable_vmrun_ip_lookup = false
 	v.whitelist_verified = true
 	v.vmx["hgfs.linkRootShare"] = "FALSE"
+  end
+
+  config.vm.provider :virtualbox do |v, override|
+	v.vm.box = "win10_virtualbox.box"
+	v.gui = true
+	v.customize ["modifyvm", :id, "--memory", 2048]
+	v.customize ["modifyvm", :id, "--cpus", 2]
+	v.customize ["modifyvm", :id, "--vram", 128]
+	v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+	v.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
   end
 
   # Disable automatic box update checking. If you disable this, then
