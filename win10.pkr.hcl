@@ -49,6 +49,8 @@ source "vmware-iso" "vm" {
 }
 
 source "virtualbox-iso" "vm" {
+  # FIXME: virtualbox tries to upload guest image which takes a significant amount of time to complete
+  # NOTE: Research 'attach' method to significantly cut down the time to complete
   # Required vars
   iso_checksum = "${var.iso_checksum}"
   iso_url      = "${var.iso_url}"
@@ -59,19 +61,10 @@ source "virtualbox-iso" "vm" {
   winrm_timeout  = "${var.winrm_timeout}"
   winrm_username = "${var.winrm_username}"
 
-  # Allow vnc for debugging
-  # NOTE Used for remote deployments
-  vmx_data = {
-    "RemoteDisplay.vnc.enabled" = "false"
-    "RemoteDisplay.vnc.port"    = "5900"
-  }
-  vnc_port_max = 5980
-  vnc_port_min = 5900
-
   # Optional vars
-  boot_wait                      = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  shutdown_command               = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  vmx_remove_ethernet_interfaces = true                            # NOTE Only used for building vagrant box images
+  boot_wait            = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  shutdown_command     = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
+  guest_additions_mode = "attach"
 
   # Machine information
   vm_name       = "${var.vm_name}"
@@ -170,9 +163,16 @@ build {
     scripts = [
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Uninstall-OneDrive.ps1",
-      #   "./Scripts/Install-VMwareTools.ps1",
       "./Scripts/Set-TLSSecureConfig.ps1",
       "./Scripts/Generate-STIG.ps1"
+    ]
+  }
+
+  # Install VMwareTools
+  provisioner "powershell" {
+    only = ["vmware-iso.vm"]
+    scripts = [
+      "./Scripts/Install-VMwareTools.ps1"
     ]
   }
 
