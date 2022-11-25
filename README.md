@@ -11,7 +11,11 @@
 
 Initialize packer template `packer init .\win10.pkr.hcl`
 
-Build image with `packer build .`
+Build image with `packer build -only="vmware-iso.vm" .`
+
+OR
+
+Build image with `packer build -only="virtualbox-iso.vm" .`
 
 Deploy vagrant box
 
