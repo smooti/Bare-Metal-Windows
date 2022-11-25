@@ -76,7 +76,8 @@ Configuration Windows10Stig
 				'V-220732', # NOTE: Disables secondary logon service (This must be enabled for packer to finish)
 				'V-220968', # NOTE: Prevents local admin from remote access (This must be enabled for packer to finish)
 				'V-220739', # FIXME: Skip lockout duration because keeps failing
-				'V-220740'  # FIXME: Skip lockout threshold because keeps failing
+				'V-220740', # FIXME: Skip lockout threshold because keeps failing
+				'V-220741'  # FIXME: Skip Reset_account_lockout_counter because keeps failing
 			)
 		}
 	}
