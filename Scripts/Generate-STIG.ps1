@@ -84,12 +84,15 @@ Configuration Windows10Stig
 				'V-220865', # NOTE: WinRM service basic auth (If not enabled vagrant will fail)
 				'V-220866', # NOTE: WinRM service unencrypted traffic (If not enabled vagrant will fail)
 				'V-220863', # NOTE: WinRM client unencrypted traffic (If not enabled vagrant will fail)
-				'V-220868', # NOTE: WinRM client Digest Authentication (If not enabled vagrant will fail)
-				'V-220867'  # NOTE: WinRM service run-as credentials (If not enabled vagrant will fail)
+				'V-220950', # NOTE: Remote UAC (If not enabled vagrant will fail)
+				'V-220799', # NOTE: LocalAccountTokenFilterPolicy
 				'V-220739', # FIXME: Skip lockout duration because keeps failing
 				'V-220740', # FIXME: Skip lockout threshold because keeps failing
 				'V-220741'  # FIXME: Skip Reset_account_lockout_counter because keeps failing
 			)
+			# SkipRuleType = @(
+			# 	'RegistryRule'
+			# )
 		}
 		
 		Adobe AcrobatReaderSettings {
