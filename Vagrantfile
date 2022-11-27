@@ -12,24 +12,40 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.define "win10ref"
-  config.vm.box = "win10_vmware.box"
-#   config.vm.synced_folder '.', '/vagrant', disabled: true
-
-  # Communicator information
-  config.vm.communicator = "winrm"
-  config.winrm.username = "sap_admin"
-  config.winrm.password = "1qaz2wsx!QAZ@WSX"
-
-  config.vm.guest = :windows
   config.windows.halt_timeout = 15
+  config.vm.network :forwarded_port,
+  	guest: 3389,
+	host: 3389,
+	id: "rdp",
+	auto_correct: true
 
-  config.vm.network :forwarded_port, guest: 3389, host: 3389, id: "rdp", auto_correct: true
+  config.vm.define "winSilverServer" do |silverServer|
+	silverServer.vm.box = "StefanScherer/windows_2019"
+	silverServer.vm.guest = :windows
+	silverServer.vm.synced_folder '.',
+		'/vagrant',
+		disabled: true
+	silverServer.vm.provision "shell",
+		path: "Provisioners/Install-DeploymentServices.ps1"
+  end
+
+  config.vm.define "win10ref" do |gold|
+  	gold.vm.box = "win10_vmware.box"
+	gold.vm.guest = :windows
+  	gold.vm.synced_folder '.',
+		'/vagrant',
+		disabled: true
+	# Communicator information
+	gold.vm.communicator = "winrm"
+	gold.winrm.username = "sap_admin"
+	gold.winrm.password = "1qaz2wsx!QAZ@WSX"
+  end
 
   config.vm.provider :vmware_workstation do |v, override|
 	v.gui = true
 	v.vmx["memsize"] = "2048"
 	v.vmx["numvcpus"] = "2"
+	v.vmx["ethernet0.virtualDev"] = "vmxnet3"
 	v.vmx["RemoteDisplay.vnc.enabled"] = "false"
 	v.vmx["RemoteDisplay.vnc.port"] = "5900"
 	v.vmx["scsi0.virtualDev"] = "lsisas1068"
