@@ -161,13 +161,23 @@ build {
     ]
   }
 
-  # Run DscConfiguration & sysprep image
+  # FIXME: A setting is being applied causing packer to fail
+  # Run DscConfiguration
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Initiating DSC configuration...'",
-      "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force",
-	  "Write-Host 'INFO: Generalizing image...'",
-	  "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /quiet / generalize /oobe /quit",
+      "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
+    ]
+  }
+
+  # NOTE: Reboot needed for sysprep to work
+  provisioner "windows-restart" {}
+
+  # Sysprep and generalize image
+  provisioner "powershell" {
+    inline = [
+      "Write-Host 'INFO: Generalizing image...'",
+	  "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /quiet /generalize /oobe /quit",
       "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
     ]
   }
