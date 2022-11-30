@@ -12,7 +12,8 @@ $mdtFileName = 'mdt.msi'
 Invoke-WebRequest -Uri $mdtUri -OutFile $mdtFileName
 msiexec.exe /i $mdtFileName /quiet /qn
 Import-Module 'C:\Program Files\Microsoft Deployment Toolkit\bin\MicrosoftDeploymentToolkit.psd1'
-
+New-Item -type Directory -Path C:\FolderNew
+([wmiclass]'win32_share').Create('C:\FolderNew', 'ShareNew', 0)
 $driveParameters = @{
 	Name        = 'DS002'
 	PSProvider  = 'MDTProvider'
