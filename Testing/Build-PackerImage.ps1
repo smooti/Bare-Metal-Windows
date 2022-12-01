@@ -30,9 +30,11 @@ switch ($OSName) {
 $s1configFile = 'Testing/s1-setup.pkr.hcl'
 $s2configFile = 'Testing/s2-update.pkr.hcl'
 $s3configFile = 'Testing/s3-provision.pkr.hcl'
+$s4configFile = 'Testing/s4-sysprep.pkr.hcl'
 
 $source2Path = "output-$($osData.os_name)-base\$($osData.os_name)-base.vmx"
-$source3Path = "output-$($osData.os_name)-updates\$($osData.os_name)-base.vmx"
+$source3Path = "output-$($osData.os_name)-updates\$($osData.os_name)-updates.vmx"
+$source4Path = "output-$($osData.os_name)-updates\$($osData.os_name)-provisioned.vmx"
 
 $s1args = @{
 	FilePath     = 'packer.exe'
@@ -55,14 +57,21 @@ $s3args = @{
 	NoNewWindow  = $true
 }
 
-# # Base Image
+$s4args = @{
+	FilePath     = 'packer.exe'
+	ArgumentList = "build -var `"os_name=$($osData.os_name)`" -var `"source_path=$($source4Path)`" $($s4configFile)"
+	wait         = $true
+	NoNewWindow  = $true
+}
+
+# # Unpack Image
 # Start-Process @s1args
 
 # Installs Windows Updates
 Start-Process @s2args
 
-# # # Cleanup
-# Start-Process @s3args
+# Provision
+Start-Process @s3args
 
-# # Vagrant Image Only
-# Start-Process -FilePath 'packer.exe' -ArgumentList "build  -var `"os_name=$($osData.os_name)`" -var `"source_path=.\output-$($osData.os_name)-cleanup\$($osData.os_name)-cleanup.ovf`" .\04-local.json" -Wait -NoNewWindow
+# Sysprep
+Start-Process @s4args

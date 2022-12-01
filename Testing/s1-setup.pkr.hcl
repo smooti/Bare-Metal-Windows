@@ -21,7 +21,7 @@ source "vmware-iso" "win10-base" {
   # Optional vars
   boot_wait                      = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
   shutdown_command               = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  
+
   # Machine information
   vm_name           = "${var.vm_name}"
   cpus              = "4"
@@ -46,10 +46,10 @@ build {
 variables {
   iso_url         = ""
   iso_checksum    = ""
-  headless        = "true"
   guest_os_type   = ""
   os_name         = ""
   autounattend    = "./Answers/10/autounattend.xml"
+  headless        = "true"
   vm_name         = "win10-base"
   vhv_enable      = "false"
   vmx_version     = "14"

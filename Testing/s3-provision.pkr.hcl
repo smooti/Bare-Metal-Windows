@@ -1,5 +1,6 @@
 source "vmware-vmx" "win10-provisioned" {
   source_path = "${var.source_path}"
+  vm_name = "${var.os_name}-provisioned"
 
   # WinRM connection information
   communicator     = "winrm"
@@ -19,7 +20,7 @@ source "vmware-vmx" "win10-provisioned" {
 }
 
 build {
-  sources = ["sources.vmware-vmx.updates"]
+  sources = ["sources.vmware-vmx.win10-provisioned"]
 
   # Upload wallpapers
   provisioner "file" {

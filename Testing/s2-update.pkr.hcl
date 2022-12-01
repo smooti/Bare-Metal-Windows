@@ -9,6 +9,7 @@ packer {
 
 source "vmware-vmx" "win10-updates" {
   source_path      = "${var.source_path}"
+  vm_name = "${var.os_name}-updates"
 
   # WinRM connection information
   communicator     = "winrm"
