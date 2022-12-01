@@ -21,8 +21,7 @@ source "vmware-iso" "win10-base" {
   # Optional vars
   boot_wait                      = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
   shutdown_command               = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  vmx_remove_ethernet_interfaces = true                            # NOTE Only used for building vagrant box images
-
+  
   # Machine information
   vm_name           = "${var.vm_name}"
   cpus              = "4"

@@ -27,14 +27,42 @@ switch ($OSName) {
 	}
 }
 
-# Base Image
-Start-Process -FilePath 'packer.exe' -ArgumentList "build  -var `"os_name=$($osData.os_name)`" -var `"iso_checksum=$($osData.iso_checksum)`" -var `"iso_url=$($osData.iso_url)`" -var `"guest_os_type=$($osData.guest_os_type)`" Testing\s1-setup.pkr.hcl" -Wait -NoNewWindow
+$s1configFile = 'Testing/s1-setup.pkr.hcl'
+$s2configFile = 'Testing/s2-update.pkr.hcl'
+$s3configFile = 'Testing/s3-provision.pkr.hcl'
 
-# # Installs Windows Updates and WMF5
-# Start-Process -FilePath 'packer.exe' -ArgumentList "build  -var `"os_name=$($osData.os_name)`" -var `"source_path=.\output-$($osData.os_name)-base\$($osData.os_name)-base.ovf`" .\02-win_updates-wmf5.json" -Wait -NoNewWindow
+$source2Path = "output-$($osData.os_name)-base\$($osData.os_name)-base.vmx"
+$source3Path = "output-$($osData.os_name)-updates\$($osData.os_name)-base.vmx"
 
-# # Cleanup
-# Start-Process -FilePath 'packer.exe' -ArgumentList "build  -var `"os_name=$($osData.os_name)`" -var `"source_path=.\output-$($osData.os_name)-updates_wmf5\$($osData.os_name)-updates_wmf5.ovf`" .\03-cleanup.json" -Wait -NoNewWindow
+$s1args = @{
+	FilePath     = 'packer.exe'
+	ArgumentList = "build -var `"os_name=$($osData.os_name)`" -var `"iso_checksum=$($osData.iso_checksum)`" -var `"iso_url=$($osData.iso_url)`" -var `"guest_os_type=$($osData.guest_os_type)`" $($s1configFile)"
+	wait         = $true
+	NoNewWindow  = $true
+}
+
+$s2args = @{
+	FilePath     = 'packer.exe'
+	ArgumentList = "build -var `"os_name=$($osData.os_name)`" -var `"source_path=$($source2Path)`" $($s2configFile)"
+	wait         = $true
+	NoNewWindow  = $true
+}
+
+$s3args = @{
+	FilePath     = 'packer.exe'
+	ArgumentList = "build -var `"os_name=$($osData.os_name)`" -var `"source_path=$($source3Path)`" $($s3configFile)"
+	wait         = $true
+	NoNewWindow  = $true
+}
+
+# # Base Image
+# Start-Process @s1args
+
+# Installs Windows Updates
+Start-Process @s2args
+
+# # # Cleanup
+# Start-Process @s3args
 
 # # Vagrant Image Only
 # Start-Process -FilePath 'packer.exe' -ArgumentList "build  -var `"os_name=$($osData.os_name)`" -var `"source_path=.\output-$($osData.os_name)-cleanup\$($osData.os_name)-cleanup.ovf`" .\04-local.json" -Wait -NoNewWindow

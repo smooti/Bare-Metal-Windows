@@ -7,8 +7,8 @@ packer {
   }
 }
 
-source "vmware-vmx" "updates" {
-  source_path = "${var.source_path}"
+source "vmware-vmx" "win10-updates" {
+  source_path      = "${var.source_path}"
 
   # WinRM connection information
   communicator     = "winrm"
@@ -28,7 +28,7 @@ source "vmware-vmx" "updates" {
 }
 
 build {
-  sources = ["sources.vmware-vmx.updates"]
+  sources = ["sources.vmware-vmx.win10-updates"]
 
   # Update Windows
   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
@@ -44,7 +44,8 @@ build {
 
 variables {
   source_path    = ""
-  headless       = "false"
+  os_name        = ""
+  headless       = "true"
   winrm_password = "1qaz2wsx!QAZ@WSX"
   winrm_timeout  = "3h"
   winrm_username = "sap_admin"

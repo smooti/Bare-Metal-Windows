@@ -10,4 +10,5 @@ DSC/*
 packer_cache
 
 output-win10-base
-output-updates
+output-win10-updates
+output-win10-provisioned
