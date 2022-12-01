@@ -48,39 +48,6 @@ source "vmware-iso" "vm" {
   ]
 }
 
-source "virtualbox-iso" "vm" {
-  # FIXME: virtualbox tries to upload guest image which takes a significant amount of time to complete
-  # NOTE: Research 'attach' method to significantly cut down the time to complete
-  # Required vars
-  iso_checksum = "${var.iso_checksum}"
-  iso_url      = "${var.iso_url}"
-
-  # WinRM connection information
-  communicator   = "winrm"
-  winrm_password = "${var.winrm_password}"
-  winrm_timeout  = "${var.winrm_timeout}"
-  winrm_username = "${var.winrm_username}"
-
-  # Optional vars
-  boot_wait            = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  shutdown_command     = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  guest_additions_mode = "attach"
-
-  # Machine information
-  vm_name       = "${var.vm_name}"
-  cpus          = "4"
-  memory        = "6192"
-  disk_size     = "61440"
-  guest_os_type = "Windows10_64"
-  headless      = "${var.headless}"
-  # NOTE The autounattend file must be specified
-  floppy_files = [
-    "${var.autounattend}",
-    "./Floppy/Set-NetworkTypeToPrivate.ps1",
-    "./Floppy/Set-WinRMSettings.ps1"
-  ]
-}
-
 build {
   sources = ["source.vmware-iso.vm", "source.virtualbox-iso.vm"]
 
@@ -94,14 +61,17 @@ build {
     inline = [
       "Write-Host 'INFO: Setting default user account image...'",
       "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer' -Name 'UseDefaultTile' -PropertyType DWORD -Value '1' | Out-Null",
+	  "",
 	  "Write-Host 'INFO: Disabling Internet Explorer and Cortana...'",
       "Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart | Out-Null",
       "New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\' -Name 'Windows Search' | Out-Null",
       "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null",
+	  "",
 	  "Write-Host 'INFO: Turning off weather and news on taskbar...'",
 	  "Stop-Process -Name 'explorer' -Force",
       "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Feeds' -Name 'ShellFeedsTaskbarViewMode' -Value '2'",
 	  "Start-Process 'explorer'",
+	  "",
 	  "Write-Host 'INFO: Turning off hibernation feature...'",
 	  "powercfg -h off"
     ]
@@ -122,12 +92,16 @@ build {
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Installing required packages...'",
+	  "",
       "Write-Host 'INFO: Installing NuGet Package...'",
       "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null", # Grab NuGet provider to interact with NuGet-based repositories
+	  "",
       "Write-Host 'INFO: Installing PSDscResources...'",
       "Install-Module PSDscResources -Force",
+	  "",
       "Write-Host 'INFO: Installing VMWare Power CLI...'",
       "Install-Module -Name VMWare.PowerCLI -SkipPublisherCheck -Force",
+	  "",
       "Write-Host 'INFO: Installing PowerStig...'",
       "Install-Module PowerStig -SkipPublisherCheck -Force"
     ]

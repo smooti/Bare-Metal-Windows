@@ -9,4 +9,5 @@ DSC/*
 
 packer_cache
 
-output-vm
+output-win10-base
+output-updates
