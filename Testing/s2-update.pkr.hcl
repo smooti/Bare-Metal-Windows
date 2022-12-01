@@ -17,6 +17,14 @@ source "vmware-vmx" "updates" {
   winrm_username   = "${var.winrm_username}"
   headless         = "${var.headless}"
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
+  # Allow vnc for debugging
+  # NOTE Used for remote deployments
+  vmx_data = {
+    "RemoteDisplay.vnc.enabled" = "false"
+    "RemoteDisplay.vnc.port"    = "5900"
+  }
+  vnc_port_max = 5980
+  vnc_port_min = 5900
 }
 
 build {
@@ -36,7 +44,7 @@ build {
 
 variables {
   source_path    = ""
-  headless       = ""
+  headless       = "false"
   winrm_password = "1qaz2wsx!QAZ@WSX"
   winrm_timeout  = "3h"
   winrm_username = "sap_admin"

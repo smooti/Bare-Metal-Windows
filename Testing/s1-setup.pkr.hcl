@@ -47,7 +47,7 @@ build {
 variables {
   iso_url         = ""
   iso_checksum    = ""
-  headless        = ""
+  headless        = "true"
   guest_os_type   = ""
   os_name         = ""
   autounattend    = "./Answers/10/autounattend.xml"
