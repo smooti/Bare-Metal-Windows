@@ -29,3 +29,12 @@ build {
     ]
   }
 }
+
+variables {
+  source_path    = ""
+  os_name        = ""
+  headless       = "true"
+  winrm_password = "1qaz2wsx!QAZ@WSX"
+  winrm_timeout  = "3h"
+  winrm_username = "sap_admin"
+}
