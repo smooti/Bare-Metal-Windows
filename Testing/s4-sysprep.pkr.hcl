@@ -20,6 +20,8 @@ source "vmware-vmx" "win10-sysprep" {
 }
 
 build {
+  sources = ["sources.vmware-vmx.win10-sysprep"]
+
   # Sysprep and generalize image
   provisioner "powershell" {
     inline = [

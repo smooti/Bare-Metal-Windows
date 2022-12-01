@@ -67,11 +67,11 @@ $s4args = @{
 # # Unpack Image
 # Start-Process @s1args
 
-# Installs Windows Updates
-Start-Process @s2args
+# # Installs Windows Updates
+# Start-Process @s2args
 
-# Provision
-Start-Process @s3args
+# # Provision
+# Start-Process @s3args
 
 # Sysprep
 Start-Process @s4args
