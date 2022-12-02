@@ -48,7 +48,7 @@ variables {
   iso_checksum    = ""
   guest_os_type   = ""
   os_name         = ""
-  autounattend    = "./Answers/10/autounattend.xml"
+  autounattend    = "./Floppy/Answers/10/autounattend.xml"
   headless        = "true"
   vm_name         = "win10-base"
   vhv_enable      = "false"

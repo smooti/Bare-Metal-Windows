@@ -7,16 +7,16 @@ packer {
   }
 }
 
-source "vmware-iso" "vm" {
+source "vmware-iso" "win10" {
   # Required vars
   iso_checksum = "${var.iso_checksum}"
   iso_url      = "${var.iso_url}"
 
   # WinRM connection information
   communicator   = "winrm"
+  winrm_username = "${var.winrm_username}"
   winrm_password = "${var.winrm_password}"
   winrm_timeout  = "${var.winrm_timeout}"
-  winrm_username = "${var.winrm_username}"
 
   # Allow vnc for debugging
   # NOTE Used for remote deployments
@@ -28,97 +28,80 @@ source "vmware-iso" "vm" {
   vnc_port_min = 5900
 
   # Optional vars
-  boot_wait                      = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  shutdown_command               = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-#   vmx_remove_ethernet_interfaces = true                            # NOTE Only used for building vagrant box images
+  boot_wait        = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
 
   # Machine information
-  vm_name           = "${var.vm_name}"
+  vm_name           = "${var.os_name}"
   cpus              = "4"
   memory            = "6192"
   disk_adapter_type = "lsisas1068"
   disk_size         = "61440"
-  guest_os_type     = "windows9-64"
+  guest_os_type     = "${var.guest_os_type}"
   headless          = "${var.headless}"
-  # NOTE The autounattend file must be specified
   floppy_files = [
-    "${var.autounattend}",
+    "${var.autounattend}", # NOTE The autounattend file must be specified
     "./Floppy/Set-NetworkTypeToPrivate.ps1",
     "./Floppy/Set-WinRMSettings.ps1"
   ]
 }
 
 build {
-  sources = ["source.vmware-iso.vm", "source.virtualbox-iso.vm"]
+  sources = ["source.vmware-iso.win10"]
 
+
+  # SECTION: Setup
   # Upload wallpapers
   provisioner "file" {
     source      = "Floppy/APL-Wallpapers"
     destination = "C:/windows/web/Wallpaper"
   }
+  # !SECTION: Setup
 
+  # SECTION - Provisioning
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Setting default user account image...'",
       "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer' -Name 'UseDefaultTile' -PropertyType DWORD -Value '1' | Out-Null",
-	  "",
-	  "Write-Host 'INFO: Disabling Internet Explorer and Cortana...'",
+      "",
+      "Write-Host 'INFO: Disabling Internet Explorer and Cortana...'",
       "Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart | Out-Null",
       "New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\' -Name 'Windows Search' | Out-Null",
       "New-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search' -Name 'AllowCortana' -PropertyType DWORD -Value '0' | Out-Null",
-	  "",
-	  "Write-Host 'INFO: Turning off weather and news on taskbar...'",
-	  "Stop-Process -Name 'explorer' -Force",
+      "",
+      "Write-Host 'INFO: Turning off weather and news on taskbar...'",
+      "Stop-Process -Name 'explorer' -Force",
       "Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Feeds' -Name 'ShellFeedsTaskbarViewMode' -Value '2'",
-	  "Start-Process 'explorer'",
-	  "",
-	  "Write-Host 'INFO: Turning off hibernation feature...'",
-	  "powercfg -h off"
+      "Start-Process 'explorer'",
+      "",
+      "Write-Host 'INFO: Turning off hibernation feature...'",
+      "powercfg -h off"
     ]
   }
-
-  #   # Update Windows
-  #   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
-  #   provisioner "windows-update" {
-  # 	search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-  # 	filters = [
-  #       "exclude:$_.Title -like '*Preview*'",
-  #       "include:$true"
-  #     ]
-  #     update_limit = 25
-  #   }
 
   # Grab required modules
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Installing required packages...'",
-	  "",
+      "",
       "Write-Host 'INFO: Installing NuGet Package...'",
       "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null", # Grab NuGet provider to interact with NuGet-based repositories
-	  "",
+      "",
       "Write-Host 'INFO: Installing PSDscResources...'",
       "Install-Module PSDscResources -Force",
-	  "",
+      "",
       "Write-Host 'INFO: Installing VMWare Power CLI...'",
       "Install-Module -Name VMWare.PowerCLI -SkipPublisherCheck -Force",
-	  "",
+      "",
       "Write-Host 'INFO: Installing PowerStig...'",
       "Install-Module PowerStig -SkipPublisherCheck -Force"
     ]
   }
 
-  #   # Update help information for powershell cmdlets
-  #   provisioner "powershell" {
-  #     inline = [
-  #       "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
-  #       "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
-  #     ]
-  #   }
-
   # Run scripts
   provisioner "powershell" {
     scripts = [
-	  "./Scripts/Set-Wallpaper.ps1",
+      "./Scripts/Set-Wallpaper.ps1",
       "./Scripts/Set-UserImage.ps1",
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Uninstall-OneDrive.ps1",
@@ -129,7 +112,7 @@ build {
 
   # Install VMwareTools
   provisioner "powershell" {
-    only = ["vmware-iso.vm"]
+    only = ["vmware-iso.win10"]
     scripts = [
       "./Scripts/Install-VMwareTools.ps1"
     ]
@@ -143,18 +126,40 @@ build {
       "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
     ]
   }
+  # !SECTION - Provisioning
 
-  # NOTE: Reboot needed for sysprep to work
-  provisioner "windows-restart" {}
+  # SECTION - Updates
+  #   # Update Windows
+  #   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
+  #   provisioner "windows-update" {
+  # 	search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+  # 	filters = [
+  #       "exclude:$_.Title -like '*Preview*'",
+  #       "include:$true"
+  #     ]
+  #     update_limit = 25
+  #   }
 
-  # Sysprep and generalize image
-  provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Generalizing image...'",
-	  "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /quiet /generalize /oobe /quit",
-      "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
-    ]
-  }
+  #   # Update help information for powershell cmdlets
+  #   provisioner "powershell" {
+  #     inline = [
+  #       "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
+  #       "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
+  #     ]
+  #   }
+  # !SECTION - Updates
+
+  #   # NOTE: Reboot needed for sysprep to work
+  #   provisioner "windows-restart" {}
+
+  #   # Sysprep and generalize image
+  #   provisioner "powershell" {
+  #     inline = [
+  #       "Write-Host 'INFO: Generalizing image...'",
+  # 	  "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /quiet /generalize /oobe /quit",
+  #       "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+  #     ]
+  #   }
 
   # Creat vagrant box
   post-processor "vagrant" {

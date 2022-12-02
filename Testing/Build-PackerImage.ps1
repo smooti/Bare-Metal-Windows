@@ -34,7 +34,7 @@ $s4configFile = 'Testing/s4-sysprep.pkr.hcl'
 
 $source2Path = "output-$($osData.os_name)-base\$($osData.os_name)-base.vmx"
 $source3Path = "output-$($osData.os_name)-updates\$($osData.os_name)-updates.vmx"
-$source4Path = "output-$($osData.os_name)-updates\$($osData.os_name)-provisioned.vmx"
+$source4Path = "output-$($osData.os_name)-provisioned\$($osData.os_name)-provisioned.vmx"
 
 $s1args = @{
 	FilePath     = 'packer.exe'
@@ -73,5 +73,5 @@ $s4args = @{
 # # Provision
 # Start-Process @s3args
 
-# Sysprep
+# Defrag and Sysprep
 Start-Process @s4args
