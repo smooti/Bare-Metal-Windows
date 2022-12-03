@@ -25,10 +25,12 @@ Configuration Windows10Stig
 	# Google Chrome version information
 	$googleChromeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].Version
 	$googleChromeStigVersion = [string]($googleChromeStigVersionObj).Major + '.' + [string]($googleChromeStigVersionObj).Minor
+	$googleChromeVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].TechnologyVersion
 
 	# Firefox version information
 	$firefoxStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].Version
 	$firefoxStigVersion = [string]($firefoxStigVersionObj).Major + '.' + [string]($firefoxStigVersionObj).Minor
+	$fireFoxVersion = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].TechnologyVersion
 
 	# Microsoft dotnet version information
 	$dotNetStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'DotNetFramework' })[-1].Version
@@ -70,6 +72,7 @@ Configuration Windows10Stig
 
 		Google GoogleChromeSettings {
 			StigVersion = $googleChromeStigVersion
+			BrowserVersion = $googleChromeVersion
 		}
 
 		DotNetFramework DotNetFrameworkSettings {
