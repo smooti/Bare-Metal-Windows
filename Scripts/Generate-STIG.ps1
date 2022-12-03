@@ -8,10 +8,10 @@ Configuration Windows10Stig
 	)
 
 	Import-DscResource -ModuleName PowerStig
-	# Internet explorer version information
-	$ieStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'InternetExplorer' })[-1].Version
-	$ieStigVersion = [string]($ieStigVersionObj).Major + '.' + [string]($ieStigVersionObj).Minor
-	$ieVersion = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'InternetExplorer' })[-1].TechnologyVersion
+	# # Internet explorer version information
+	# $ieStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'InternetExplorer' })[-1].Version
+	# $ieStigVersion = [string]($ieStigVersionObj).Major + '.' + [string]($ieStigVersionObj).Minor
+	# $ieVersion = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'InternetExplorer' })[-1].TechnologyVersion
 
 	# Windows client version information
 	$winClientStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'WindowsClient' })[-1].Version
@@ -22,15 +22,15 @@ Configuration Windows10Stig
 	$edgeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'MS' })[-1].Version
 	$edgeStigVersion = [string]($edgeStigVersionObj).Major + '.' + [string]($edgeStigVersionObj).Minor
 
-	# Google Chrome version information
-	$googleChromeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].Version
-	$googleChromeStigVersion = [string]($googleChromeStigVersionObj).Major + '.' + [string]($googleChromeStigVersionObj).Minor
-	$googleChromeVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].TechnologyVersion
+	# # Google Chrome version information
+	# $googleChromeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].Version
+	# $googleChromeStigVersion = [string]($googleChromeStigVersionObj).Major + '.' + [string]($googleChromeStigVersionObj).Minor
+	# $googleChromeVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].TechnologyVersion
 
-	# Firefox version information
-	$firefoxStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].Version
-	$firefoxStigVersion = [string]($firefoxStigVersionObj).Major + '.' + [string]($firefoxStigVersionObj).Minor
-	$fireFoxVersion = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].TechnologyVersion
+	# # Firefox version information
+	# $firefoxStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].Version
+	# $firefoxStigVersion = [string]($firefoxStigVersionObj).Major + '.' + [string]($firefoxStigVersionObj).Minor
+	# $fireFoxVersion = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].TechnologyVersion
 
 	# Microsoft dotnet version information
 	$dotNetStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'DotNetFramework' })[-1].Version
@@ -45,10 +45,10 @@ Configuration Windows10Stig
 	$defenderStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'WindowsDefender' })[-1].Version
 	$defenderStigVersion = [string]($defenderStigVersionObj).Major + '.' + [string]($defenderStigVersionObj).Minor
 
-	# Microsoft defender version information
-	$acroReaderStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].Version
-	$acroReaderStigVersion = [string]($acroReaderStigVersionObj).Major + '.' + [string]($acroReaderStigVersionObj).Minor
-	$acroReaderVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].TechnologyVersion
+	# # Microsoft defender version information
+	# $acroReaderStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].Version
+	# $acroReaderStigVersion = [string]($acroReaderStigVersionObj).Major + '.' + [string]($acroReaderStigVersionObj).Minor
+	# $acroReaderVersion = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'AcrobatReader' })[-1].TechnologyVersion
 
 	Node $NodeName
 	{
@@ -66,14 +66,13 @@ Configuration Windows10Stig
 			Exception   = @{'V-235752' = @{'ValueData' = '1' } } # NOTE: Default is '2' which blocks almost all downloads
 		}
 
-		Firefox FirefoxSettings {
-			StigVersion = $firefoxStigVersion
-		}
+		# Firefox FirefoxSettings {
+		# 	StigVersion = $firefoxStigVersion
+		# }
 
-		Google GoogleChromeSettings {
-			StigVersion = $googleChromeStigVersion
-			BrowserVersion = $googleChromeVersion
-		}
+		# Chrome GoogleChromeSettings {
+		# 	StigVersion = $googleChromeStigVersion
+		# }
 
 		DotNetFramework DotNetFrameworkSettings {
 			FrameworkVersion = $dotNetVersion
@@ -116,10 +115,10 @@ Configuration Windows10Stig
 			)
 		}
 		
-		Adobe AcrobatReaderSettings {
-			StigVersion = $acroReaderStigVersion
-			AdobeApp    = $acroReaderVersion
-		}
+		# Adobe AcrobatReaderSettings {
+		# 	StigVersion = $acroReaderStigVersion
+		# 	AdobeApp    = $acroReaderVersion
+		# }
 	}
 }
 
