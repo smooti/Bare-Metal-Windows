@@ -1,64 +1,15 @@
-packer {
-  required_plugins {
-    windows-update = {
-      version = "0.14.1"
-      source  = "github.com/rgl/windows-update"
-    }
-  }
-}
-
-source "vmware-iso" "win10" {
-  # Required vars
-  iso_checksum = "${var.iso_checksum}"
-  iso_url      = "${var.iso_url}"
-
-  # WinRM connection information
-  communicator   = "winrm"
-  winrm_username = "${var.winrm_username}"
-  winrm_password = "${var.winrm_password}"
-  winrm_timeout  = "${var.winrm_timeout}"
-
-  # Allow vnc for debugging
-  # NOTE Used for remote deployments
-  vmx_data = {
-    "RemoteDisplay.vnc.enabled" = "true"
-    "RemoteDisplay.vnc.port"    = "5900"
-  }
-  vnc_port_max = 5980
-  vnc_port_min = 5900
-
-  # Optional vars
-  boot_wait        = "6m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-
-  # Machine information
-  vm_name           = "${var.os_name}"
-  cpus              = "4"
-  memory            = "6192"
-  disk_adapter_type = "lsisas1068"
-  disk_size         = "61440"
-  guest_os_type     = "${var.guest_os_type}"
-  headless          = "${var.headless}"
-  floppy_files = [
-    "${var.autounattend}", # NOTE The autounattend file must be specified
-    "./Floppy/Set-NetworkTypeToPrivate.ps1",
-    "./Floppy/Set-WinRMSettings.ps1"
-  ]
-}
-
 build {
   sources = ["source.vmware-iso.win10"]
 
-
-  # SECTION: Setup
+  // SECTION: Setup //
   # Upload wallpapers
   provisioner "file" {
     source      = "Floppy/APL-Wallpapers"
     destination = "C:/windows/web/Wallpaper"
   }
-  # !SECTION: Setup
+  // !SECTION: Setup //
 
-  # SECTION - Provisioning
+  // SECTION - Provisioning //
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Setting default user account image...'",
@@ -118,7 +69,7 @@ build {
     ]
   }
 
-  # FIXME: A setting is being applied causing packer to fail
+  // FIXME: A setting is being applied causing packer to fail //
   # Run DscConfiguration
   provisioner "powershell" {
     inline = [
@@ -126,9 +77,7 @@ build {
       "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
     ]
   }
-  # !SECTION - Provisioning
 
-  # SECTION - Updates
   # Update Windows
   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
   provisioner "windows-update" {
@@ -147,20 +96,12 @@ build {
       "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
     ]
   }
-  # !SECTION - Updates
 
-  # Defrag image
-  provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Defragging image...'",
-      "Optimize-Volume -DriveLetter C"
-    ]
-  }
-
-  # Creat vagrant box
   post-processor "vagrant" {
     keep_input_artifact  = false
     output               = "win10_{{ .Provider }}.box"
     vagrantfile_template = "VagrantFile"
   }
+  // SECTION - Provisioning //
+
 }
