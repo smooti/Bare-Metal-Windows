@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 	gold.vm.guest = :windows
   	gold.vm.synced_folder '.',
 		'/vagrant',
-		disabled: true
+		disabled: false
 	# Communicator information
 	gold.vm.communicator = "winrm"
 	gold.winrm.username = "sap_admin"

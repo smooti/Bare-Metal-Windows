@@ -21,14 +21,14 @@ source "vmware-iso" "win10" {
   # Allow vnc for debugging
   # NOTE Used for remote deployments
   vmx_data = {
-    "RemoteDisplay.vnc.enabled" = "false"
+    "RemoteDisplay.vnc.enabled" = "true"
     "RemoteDisplay.vnc.port"    = "5900"
   }
   vnc_port_max = 5980
   vnc_port_min = 5900
 
   # Optional vars
-  boot_wait        = "5m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  boot_wait        = "6m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
 
   # Machine information
@@ -150,7 +150,7 @@ build {
   # !SECTION - Updates
 
   #   # NOTE: Reboot needed for sysprep to work
-  #   provisioner "windows-restart" {}
+    # provisioner "windows-restart" {}
 
   #   # Sysprep and generalize image
   #   provisioner "powershell" {
