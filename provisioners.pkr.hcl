@@ -8,18 +8,6 @@ build {
     destination = "C:/windows/web/Wallpaper"
   }
 
-  # Setup shutdown command
-  provisioner "file" {
-    source      = "Scripts/Shutdown-Packer.bat"
-    destination = "C:/windows/packer/Shutdown-Packer.bat"
-  }
-
-  # Allow winRM through firewall on boot
-  provisioner "file" {
-    source      = "Scripts/Setup-Complete.bat"
-    destination = "C:/Windows/setup/Scripts/Setup-Complete.bat"
-  }
-
   # Update Windows
   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
   provisioner "windows-update" {
