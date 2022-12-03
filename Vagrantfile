@@ -31,6 +31,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "win10" do |gold|
   	gold.vm.box = "win10_vmware.box"
+	# gold.vm.provision "windows-sysprep"
 	gold.vm.guest = :windows
   	gold.vm.synced_folder '.',
 		'/vagrant',

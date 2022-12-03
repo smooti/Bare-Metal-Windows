@@ -1,13 +1,44 @@
 build {
-  sources = ["source.vmware-iso.win10"]
+  sources = ["source.vmware-iso.windows"]
 
-  // SECTION: Setup //
+  // SECTION: Setup & Update//
   # Upload wallpapers
   provisioner "file" {
     source      = "Floppy/APL-Wallpapers"
     destination = "C:/windows/web/Wallpaper"
   }
-  // !SECTION: Setup //
+
+  # Setup shutdown command
+  provisioner "file" {
+    source      = "Scripts/Shutdown-Packer.bat"
+    destination = "C:/windows/packer/Shutdown-Packer.bat"
+  }
+
+  # Allow winRM through firewall on boot
+  provisioner "file" {
+    source      = "Scripts/Setup-Complete.bat"
+    destination = "C:/Windows/setup/Scripts/Setup-Complete.bat"
+  }
+
+  # Update Windows
+  # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
+  provisioner "windows-update" {
+    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+    filters = [
+      "exclude:$_.Title -like '*Preview*'",
+      "include:$true"
+    ]
+    update_limit = 25
+  }
+
+  # Update help information for powershell cmdlets
+  provisioner "powershell" {
+    inline = [
+      "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
+      "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
+    ]
+  }
+  // !SECTION: Setup & Update//
 
   // SECTION - Provisioning //
   provisioner "powershell" {
@@ -63,7 +94,7 @@ build {
 
   # Install VMwareTools
   provisioner "powershell" {
-    only = ["vmware-iso.win10"]
+    only = ["vmware-iso.windows"]
     scripts = [
       "./Scripts/Install-VMwareTools.ps1"
     ]
@@ -75,25 +106,6 @@ build {
     inline = [
       "Write-Host 'INFO: Initiating DSC configuration...'",
       "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
-    ]
-  }
-
-  # Update Windows
-  # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    filters = [
-      "exclude:$_.Title -like '*Preview*'",
-      "include:$true"
-    ]
-    update_limit = 25
-  }
-
-  # Update help information for powershell cmdlets
-  provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
-      "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
     ]
   }
 

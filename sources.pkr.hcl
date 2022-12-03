@@ -15,6 +15,7 @@ source "vmware-iso" "windows" {
     "RemoteDisplay.vnc.enabled" = "true"
     "RemoteDisplay.vnc.port"    = "5900"
   }
+  vmx_remove_ethernet_interfaces = true	# NOTE: For vagrant box
   vnc_port_max = 5980
   vnc_port_min = 5900
 
