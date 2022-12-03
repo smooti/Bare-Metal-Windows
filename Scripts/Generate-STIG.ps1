@@ -22,6 +22,14 @@ Configuration Windows10Stig
 	$edgeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'MS' })[-1].Version
 	$edgeStigVersion = [string]($edgeStigVersionObj).Major + '.' + [string]($edgeStigVersionObj).Minor
 
+	# Google Chrome version information
+	$googleChromeStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.TechnologyVersion -eq 'Chrome' })[-1].Version
+	$googleChromeStigVersion = [string]($googleChromeStigVersionObj).Major + '.' + [string]($googleChromeStigVersionObj).Minor
+
+	# Firefox version information
+	$firefoxStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'FireFox' })[-1].Version
+	$firefoxStigVersion = [string]($firefoxStigVersionObj).Major + '.' + [string]($firefoxStigVersionObj).Minor
+
 	# Microsoft dotnet version information
 	$dotNetStigVersionObj = (Get-Stig -ListAvailable | Where-Object { $_.Technology -eq 'DotNetFramework' })[-1].Version
 	$dotNetStigVersion = [string]($dotNetStigVersionObj).Major + '.' + [string]($dotNetStigVersionObj).Minor
@@ -48,12 +56,20 @@ Configuration Windows10Stig
 		# 	Stigversion    = $ieStigVersion
 		# }
 
-		Edge MSEdge {
+		Edge MSEdgeSettings {
 			StigVersion = $edgeStigVersion
 			SkipRule    = @(
 				'V-235719' # NOTE: User control of proxy settings must be disabled
 			)
 			Exception   = @{'V-235752' = @{'ValueData' = '1' } } # NOTE: Default is '2' which blocks almost all downloads
+		}
+
+		Firefox FirefoxSettings {
+			StigVersion = $firefoxStigVersion
+		}
+
+		Google GoogleChromeSettings {
+			StigVersion = $googleChromeStigVersion
 		}
 
 		DotNetFramework DotNetFrameworkSettings {
@@ -89,10 +105,12 @@ Configuration Windows10Stig
 				'V-220739', # FIXME: Skip lockout duration because keeps failing
 				'V-220740', # FIXME: Skip lockout threshold because keeps failing
 				'V-220741'  # FIXME: Skip Reset_account_lockout_counter because keeps failing
+				# 'V-220718'  # FIXME: Checks if IIS is installed Get-DSCConfiguration will fail when it checks for this setting
 			)
-			# SkipRuleType = @(
+			SkipRuleType = @(
+				'WindowsFeatureRule'
 			# 	'RegistryRule'
-			# )
+			)
 		}
 		
 		Adobe AcrobatReaderSettings {
