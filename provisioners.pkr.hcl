@@ -80,13 +80,13 @@ build {
     ]
   }
 
-#   # Install VMwareTools
-#   provisioner "powershell" {
-#     only = ["vmware-iso.windows"]
-#     scripts = [
-#       "./Scripts/Install-VMwareTools.ps1"
-#     ]
-#   }
+  # Install VMwareTools
+  provisioner "powershell" {
+    only = ["vmware-iso.windows"]
+    scripts = [
+      "./Scripts/Install-VMwareTools.ps1"
+    ]
+  }
 
   // FIXME: A setting is being applied causing packer to fail //
   # Run DscConfiguration
