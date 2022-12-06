@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 	silverServer.vm.guest = :windows
 	silverServer.vm.synced_folder '.',
 		'/vagrant',
-		disabled: true
+		disabled: false
 	silverServer.vm.provision "shell",
 		path: "Provisioners/Install-DeploymentServices.ps1"
   end
