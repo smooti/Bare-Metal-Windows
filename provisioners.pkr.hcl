@@ -8,24 +8,24 @@ build {
     destination = "C:/windows/web/Wallpaper"
   }
 
-  # Update Windows
-  # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    filters = [
-      "exclude:$_.Title -like '*Preview*'",
-      "include:$true"
-    ]
-    update_limit = 25
-  }
+#   # Update Windows
+#   # NOTE: References for update GUIDS https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ff357803(v=vs.85)
+#   provisioner "windows-update" {
+#     search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+#     filters = [
+#       "exclude:$_.Title -like '*Preview*'",
+#       "include:$true"
+#     ]
+#     update_limit = 25
+#   }
 
-  # Update help information for powershell cmdlets
-  provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
-      "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
-    ]
-  }
+#   # Update help information for powershell cmdlets
+#   provisioner "powershell" {
+#     inline = [
+#       "Write-Host 'INFO: Grabbing latest help files for powershell modules...'",
+#       "Update-Help -UICulture en-us -ErrorAction Ignore -Force"
+#     ]
+#   }
   // !SECTION: Setup & Update//
 
   // SECTION - Provisioning //
