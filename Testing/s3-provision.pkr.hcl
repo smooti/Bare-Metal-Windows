@@ -28,6 +28,12 @@ build {
     destination = "C:/windows/web/Wallpaper"
   }
 
+  # Upload policies
+  provisioner "file" {
+    source      = "Floppy/Policies"
+    destination = "C:/windows/Temp"
+  }
+
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Setting default user account image...'",
@@ -51,19 +57,8 @@ build {
   # Grab required modules
   provisioner "powershell" {
     inline = [
-      "Write-Host 'INFO: Installing required packages...'",
-      "",
       "Write-Host 'INFO: Installing NuGet Package...'",
-      "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null", # Grab NuGet provider to interact with NuGet-based repositories
-      "",
-      "Write-Host 'INFO: Installing PSDscResources...'",
-      "Install-Module PSDscResources -Force",
-      "",
-      "Write-Host 'INFO: Installing VMWare Power CLI...'",
-      "Install-Module -Name VMWare.PowerCLI -SkipPublisherCheck -Force",
-      "",
-      "Write-Host 'INFO: Installing PowerStig...'",
-      "Install-Module PowerStig -SkipPublisherCheck -Force"
+      "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null" # Grab NuGet provider to interact with NuGet-based repositories
     ]
   }
 
@@ -82,8 +77,7 @@ build {
       "./Scripts/Set-UserImage.ps1",
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Uninstall-OneDrive.ps1",
-      "./Scripts/Set-TLSSecureConfig.ps1",
-      "./Scripts/Generate-STIG.ps1"
+      "./Scripts/Set-TLSSecureConfig.ps1"
     ]
   }
 
@@ -95,12 +89,10 @@ build {
     ]
   }
 
-  # FIXME: A setting is being applied causing packer to fail
-  # Run DscConfiguration
+  # Configure WinRM
   provisioner "powershell" {
-    inline = [
-      "Write-Host 'INFO: Initiating DSC configuration...'",
-      "Start-DscConfiguration -Path \"$env:Userprofile\\Windows10Stig\" -Wait -Force"
+    scripts = [
+      "./Scripts/end.ps1"
     ]
   }
 
