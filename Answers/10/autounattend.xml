@@ -121,9 +121,9 @@
                             <PlainText>false</PlainText>
                         </Password>
                         <Description>Break glass emergency account</Description>
-                        <DisplayName>sap_admin</DisplayName>
+                        <DisplayName>fire.keeper</DisplayName>
                         <Group>administrators</Group>
-                        <Name>sap_admin</Name>
+                        <Name>fire.keeper</Name>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
@@ -137,7 +137,7 @@
                     <Value>MQBxAGEAegAyAHcAcwB4ACEAUQBBAFoAQABXAFMAWABQAGEAcwBzAHcAbwByAGQA</Value>
                     <PlainText>false</PlainText>
                 </Password>
-                <Username>sap_admin</Username>
+                <Username>fire.keeper</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>

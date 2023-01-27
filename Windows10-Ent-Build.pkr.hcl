@@ -30,7 +30,7 @@ variable "autounattend" {
 
 variable "winrm_username" {
   type    = string
-  default = "sap_admin"
+  default = "fire.keeper"
 }
 
 variable "winrm_password" {
