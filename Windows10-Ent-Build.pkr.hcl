@@ -43,7 +43,7 @@ source "vmware-iso" "win10-iso" {
   # Required vars
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  boot_wait        = "1m"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  boot_wait        = "1s"                            # NOTE This needs to be set as Windows takes longer to finish initialization
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
   boot_command = [
     "<enter><enter>"
