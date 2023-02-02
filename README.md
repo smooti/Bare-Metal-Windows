@@ -1,6 +1,6 @@
 # Purpose
 
-Create a perfect WIM everytime ;)
+Create a windows immutable golden image. This will also output the image into the 'WIM' format that can be passed into other technologies such as MDT for further custimization and deployment to bare-metal machines.
 
 ## Pre-Requisites
 
