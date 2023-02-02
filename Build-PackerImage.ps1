@@ -60,7 +60,7 @@ Try {
 
 	Mount-vmdk -Path '.\output\step-4\disk-cl3.vmdk' | Out-Null
 	Write-Output "Capturing image... ( Please be patient $([System.Char]::ConvertFromUtf32($emojiIcon)) this can take a while)"
-	New-WindowsImage -ImagePath $imagePath -CapturePath $drive -Name $osData.name -CompressionType 'Max' -Verify
+	New-WindowsImage -ImagePath $imagePath -CapturePath $drive -Name "Windows10-Enterprise" -CompressionType 'Max' -Verify
 
 	$endTime = (Get-Date)
 	$elapsedTime = $endTime - $startTime
