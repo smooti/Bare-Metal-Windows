@@ -71,7 +71,7 @@ source "vmware-iso" "win10-iso" {
   disk_adapter_type = "lsisas1068"
   disk_size         = "61440"
   guest_os_type     = "${var.guest_os_type}"
-  headless          = false
+  headless          = true
   usb               = true
   cd_files = [
     "${var.autounattend}", # NOTE The autounattend file must be specified
