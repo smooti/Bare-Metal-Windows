@@ -28,23 +28,22 @@ $step4Args = @{
 	NoNewWindow  = $true
 }
 
-# Unpack and Setup Image
 Try {
+	# Unpack and Setup Image
 	Start-Process @step1Args
+
+	# Provision Image
+	Start-Process @step2Args
+
+	# Update Image
+	Start-Process @step3Args
+
+	# Cleanup Image
+	Start-Process @step4Args
 }
 Catch {
 	$_
 }
-
-
-# Provision Image
-Start-Process @step2Args
-
-# Update Image
-Start-Process @step3Args
-
-# Cleanup Image
-Start-Process @step4Args
 
 # Mount & Capture
 $drive = (Get-ChildItem function:[d-z]: -n | Where-Object { !(Test-Path $_) })[0]	# NOTE: OSFMount uses the first unused drive letter
@@ -60,7 +59,7 @@ Try {
 
 	Mount-vmdk -Path '.\output\step-4\disk-cl3.vmdk' | Out-Null
 	Write-Output "Capturing image... ( Please be patient $([System.Char]::ConvertFromUtf32($emojiIcon)) this can take a while)"
-	New-WindowsImage -ImagePath $imagePath -CapturePath $drive -Name "Windows10-Enterprise" -CompressionType 'Max' -Verify
+	New-WindowsImage -ImagePath $imagePath -CapturePath $drive -Name 'Windows10-Enterprise' -CompressionType 'Max' -Verify
 
 	$endTime = (Get-Date)
 	$elapsedTime = $endTime - $startTime
