@@ -29,7 +29,13 @@ $step4Args = @{
 }
 
 # Unpack and Setup Image
-Start-Process @step1Args
+Try {
+	Start-Process @step1Args
+}
+Catch {
+	$_
+}
+
 
 # Provision Image
 Start-Process @step2Args

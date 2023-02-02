@@ -7,6 +7,11 @@ Create a perfect WIM everytime ;)
 - [Packer](https://developer.hashicorp.com/packer/downloads)
 - [VMware](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html)
 - [OSFMount](https://www.osforensics.com/tools/mount-disk-images.html)
+- One of the following must be installed and added to your **PATH** environment variable. (This is due to how packer encapsulates our boot files into an ISO in order to mount them. Documentation [here](https://developer.hashicorp.com/packer/plugins/builders/vmware/iso#cd-configuration:~:text=Use%20of%20this,the%20Windows%20ADK))
+  - [xorriso](https://www.gnu.org/software/xorriso/)
+  - [mkisofs](https://linux.die.net/man/8/mkisofs)
+  - [hdiutil](https://ss64.com/osx/hdiutil.html) (normally found in macOS)
+  - [oscdimg](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/oscdimg-command-line-options?view=windows-11) (normally found in Windows as part of the Windows ADK)
 
 ## Quick Start
 

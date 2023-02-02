@@ -43,7 +43,7 @@ source "vmware-iso" "win10-iso" {
   # Required vars
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
-  boot_wait        = "1s"                            # NOTE This needs to be set as Windows takes longer to finish initialization
+  boot_wait        = "3s"                            # NOTE This needs to be set as Windows takes longer to finish initialization
   shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
   boot_command = [
     "<enter><enter>"
@@ -71,13 +71,14 @@ source "vmware-iso" "win10-iso" {
   disk_adapter_type = "lsisas1068"
   disk_size         = "61440"
   guest_os_type     = "${var.guest_os_type}"
-  headless          = true
+  headless          = false
   usb               = true
-  floppy_files = [
+  cd_files = [
     "${var.autounattend}", # NOTE The autounattend file must be specified
-    "./Floppy/Set-NetworkTypeToPrivate.ps1",
-    "./Floppy/Set-WinRMSettings.ps1"
+    "./Scripts/Set-NetworkTypeToPrivate.ps1",
+    "./Scripts/Set-WinRMSettings.ps1"
   ]
+  cd_label = "cidata"
 }
 
 source "vmware-vmx" "win10-vmx" {
