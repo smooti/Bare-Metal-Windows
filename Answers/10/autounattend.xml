@@ -67,7 +67,7 @@
             </DiskConfiguration>
             <UserData>
                 <AcceptEula>true</AcceptEula>
-                <FullName>System Administrator</FullName>
+                <FullName>Systems Administrator</FullName>
                 <Organization>Kobe LLC</Organization>
                 <ProductKey>
                     <WillShowUI>OnError</WillShowUI>
@@ -205,7 +205,6 @@
             <OEMInformation>
                 <HelpCustomized>false</HelpCustomized>
             </OEMInformation>
-            <ComputerName>ws1</ComputerName>
             <TimeZone>Eastern Standard Time</TimeZone>
             <RegisteredOwner />
             <RegisteredOrganization>Kobe Co.</RegisteredOrganization>
@@ -214,5 +213,4 @@
             <SkipAutoActivation>false</SkipAutoActivation>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/users/smooti.galaxy/downloads/install.wim#Windows 10 Enterprise" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
