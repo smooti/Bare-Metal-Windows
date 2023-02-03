@@ -69,7 +69,7 @@ source "vmware-iso" "win10-iso" {
   disk_size         = "61440"
   disk_adapter_type = "lsisas1068"
   guest_os_type     = "${var.guest_os_type}"
-  headless          = false
+  headless          = true
   usb               = true
 
   # Mount files
