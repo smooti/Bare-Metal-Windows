@@ -88,7 +88,7 @@ source "vmware-iso" "win10-iso" {
 build {
   name = "gold"
   source "sources.vmware-iso.win10-iso" {
-    output_directory = var.output_directory
+    output_directory = "${var.output_directory}/${var.vm_name}"
 	shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
   }
   provisioner "file" {
