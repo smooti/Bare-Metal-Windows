@@ -214,14 +214,14 @@ build {
 
   # Setup packer shutdown
   provisioner "file" {
-    source      = "Scripts\\Packer-Shutdown.cmd"
-    destination = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
+    source      = "Scripts/Packer-Shutdown.cmd"
+    destination = "C:/Windows/Temp/Packer-Shutdown.cmd"
   }
 
   # Placing SetupComplete
   provisioner "file" {
-    source      = "Resources\\SetupComplete.cmd"
-    destination = "C:\\Windows\\Setup\\Scripts\\SetupComplete.cmd"
+    source      = "Resources/SetupComplete.cmd"
+    destination = "C:/Windows/Setup/Scripts/SetupComplete.cmd"
   }
 
   # Defrag cleanup
