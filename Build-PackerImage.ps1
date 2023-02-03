@@ -15,7 +15,7 @@ Import-Module '.\Modules\vmdk.psm1'
 $variableFile = '.\vars.pkrvars.hcl'
 $packerArgs = @{
 	FilePath     = 'packer.exe'
-	ArgumentList = "build -force -only=fire.vmware-iso.win10-iso --var-file=$($variableFile) ."
+	ArgumentList = "build -force --var-file=$($variableFile) ."
 	wait         = $true
 	NoNewWindow  = $true
 }
