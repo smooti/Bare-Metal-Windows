@@ -4,14 +4,22 @@ Create a windows immutable golden image. This will also output the image into th
 
 ## Pre-Requisites
 
-- [Packer](https://developer.hashicorp.com/packer/downloads)
-- [VMware](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html)
-- [OSFMount](https://www.osforensics.com/tools/mount-disk-images.html)
-- One of the following must be installed and added to your **PATH** environment variable. (This is due to how packer encapsulates our boot files into an ISO in order to mount them. Documentation [here](https://developer.hashicorp.com/packer/plugins/builders/vmware/iso#cd-configuration:~:text=Use%20of%20this,the%20Windows%20ADK))
-  - [xorriso](https://www.gnu.org/software/xorriso/)
-  - [mkisofs](https://linux.die.net/man/8/mkisofs)
-  - [hdiutil](https://ss64.com/osx/hdiutil.html) (normally found in macOS)
-  - [oscdimg](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/oscdimg-command-line-options?view=windows-11) (normally found in Windows as part of the Windows ADK)
+- [Packer](https://developer.hashicorp.com/packer/downloads) (Required)
+- [VMware](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html) (Required)
+
+---
+
+**Note** (Required)
+One of the following must be installed and added to your **PATH** environment variable. (This is due to how packer encapsulates our boot files into an ISO in order to mount them. Documentation [here](https://developer.hashicorp.com/packer/plugins/builders/vmware/iso#cd-configuration:~:text=Use%20of%20this,the%20Windows%20ADK))
+
+- [xorriso](https://www.gnu.org/software/xorriso/)
+- [mkisofs](https://linux.die.net/man/8/mkisofs)
+- [hdiutil](https://ss64.com/osx/hdiutil.html) (normally found in macOS)
+- [oscdimg](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/oscdimg-command-line-options?view=windows-11) (normally found in Windows as part of the Windows ADK)
+
+---
+
+- [OSFMount](https://www.osforensics.com/tools/mount-disk-images.html) (Optional) Needed only if wanting to output 'wim' file with `-Capture`)
 
 ## Quick Start
 
@@ -20,13 +28,39 @@ Create a windows immutable golden image. This will also output the image into th
 
 ## Customizing
 
-### OEM Information
+### [Answer File](./Answers/)
 
-Custom OEM information can be configured in the respective answer file located [here](./Answers/)
+Things defined in answer file:
+
+- Registered owner
+  - User
+  - Organization
+
+- Windows activation key
+- Built-in administrator account
+  - Username
+  - Password
+
+- Locale Settings
+  - Input Locale
+  - System Locale
+  - UI Language
+  - User Locale
+
+- OEM Information
+- Computername
+- TimeZone
 
 ## Building
 
-In order to build the image you can run the `.\Build-PackerImage.ps1` located at the root of the repository.
+```powershell
+# Build image
+.\Build-PackerImage.ps1
+
+# Build and capture image
+# NOTE: OSFMOUNT required
+.\Build-PackerImage -Capture
+```
 
 ## Testing
 
