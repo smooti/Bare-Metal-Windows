@@ -29,7 +29,7 @@ variable "autounattend" {
 }
 
 variable "output_directory" {
-  type    = string
+  type = string
 }
 
 variable "winrm_username" {
@@ -43,13 +43,9 @@ variable "winrm_password" {
 
 source "vmware-iso" "win10-iso" {
 
-  # Required vars
-  iso_checksum     = "${var.iso_checksum}"
-  iso_url          = "${var.iso_url}"
-  boot_wait        = "3s"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  boot_command = [
-    "<enter><enter>"
-  ]
+  # ISO vars
+  iso_checksum = "${var.iso_checksum}"
+  iso_url      = "${var.iso_url}"
 
   # WinRM connection information
   communicator   = "winrm"
@@ -66,22 +62,30 @@ source "vmware-iso" "win10-iso" {
   }
 
   # Machine information
-  vm_name           = "${var.vm_name}"
+  vm_name           = var.vm_name
   cpus              = "2"
   cores             = "2"
   memory            = "6192"
   disk_size         = "61440"
   disk_adapter_type = "lsisas1068"
   guest_os_type     = "${var.guest_os_type}"
-  headless          = true
+  headless          = false
   usb               = true
+
+  # Mount files
   cd_files = [
     "${var.autounattend}", # NOTE The autounattend file must be specified
     "./Scripts/Set-NetworkTypeToPrivate.ps1",
     "./Scripts/Set-WinRMSettings.ps1"
   ]
-  cd_label        = "cidata"
+  cd_label = "cidata"
+
+  # Other
   skip_compaction = false
+  boot_wait       = "3s" # NOTE This needs to be set as Windows takes longer to finish initialization
+  boot_command = [
+    "<enter><enter>"
+  ]
 }
 
 # Unpack and Provision Image
@@ -89,21 +93,22 @@ build {
   name = "gold"
   source "sources.vmware-iso.win10-iso" {
     output_directory = "${var.output_directory}/${var.vm_name}"
-	shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
+    shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
   }
+  
   provisioner "file" {
-    source      = "Resources/Images/wallpapers"
-    destination = "C:/windows/web/wallpaper/Better-Images"
-  }
-
-  provisioner "file" {
-    source      = "Resources/Images/users"
-    destination = "C:/windows/web/wallpaper/Better-Images"
+    source      = "Resources\\Images\\wallpapers"
+    destination = "C:\\windows\\web\\wallpaper\\Better-Images"
   }
 
   provisioner "file" {
-    source      = "Resources/DoD_Root_Certificates.p7b"
-    destination = "C:/windows/Temp/DoD_Root_Certificates.p7b"
+    source      = "Resources\\Images\\users"
+    destination = "C:\\windows\\web\\wallpaper\\Better-Images"
+  }
+
+  provisioner "file" {
+    source      = "Resources\\DoD_Root_Certificates.p7b"
+    destination = "C:\\windows\\Temp\\DoD_Root_Certificates.p7b"
   }
 
   provisioner "powershell" {
@@ -214,14 +219,14 @@ build {
 
   # Setup packer shutdown
   provisioner "file" {
-    source      = "Scripts/Packer-Shutdown.cmd"
-    destination = "C:/Windows/Temp/Packer-Shutdown.cmd"
+    source      = "Scripts\\Packer-Shutdown.cmd"
+    destination = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
   }
 
   # Placing SetupComplete
   provisioner "file" {
-    source      = "Resources/SetupComplete.cmd"
-    destination = "C:/Windows/Setup/Scripts/SetupComplete.cmd"
+    source      = "Resources\\SetupComplete.cmd"
+    destination = "C:\\Windows\\Setup\\Scripts\\SetupComplete.cmd"
   }
 
   # Defrag cleanup
