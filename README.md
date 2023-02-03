@@ -24,7 +24,8 @@ One of the following must be installed and added to your **PATH** environment va
 ## Quick Start
 
 - Change into the project directory and execute `packer init .` (This will download all missing plugins)
-- Now as an administrator run the build script `Build-PackerImage.ps1`
+- Specify `output_directory` in [vars.pkrvars.hcl](./vars.pkrvars.hcl)
+- Run the build script `Build-PackerImage.ps1`
 
 ## Customizing
 
