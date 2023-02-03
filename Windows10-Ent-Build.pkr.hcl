@@ -2,7 +2,7 @@ packer {
   required_plugins {
     windows-update = {
       version = "0.14.1"
-      source = "github.com/rgl/windows-update"
+      source  = "github.com/rgl/windows-update"
     }
   }
 }
@@ -15,7 +15,7 @@ variable "iso_checksum" {
   type = string
 }
 
-variable "os_name" {
+variable "vm_name" {
   type = string
 }
 
@@ -28,14 +28,17 @@ variable "autounattend" {
   default = "./Answers/10/autounattend.xml"
 }
 
-variable "winrm_username" {
+variable "output_directory" {
   type    = string
-  default = "fire.keeper"
+}
+
+variable "winrm_username" {
+  type = string
 }
 
 variable "winrm_password" {
-  type    = string
-  default = "1qaz2wsx!QAZ@WSX"
+  type      = string
+  sensitive = true
 }
 
 source "vmware-iso" "win10-iso" {
@@ -44,7 +47,6 @@ source "vmware-iso" "win10-iso" {
   iso_checksum     = "${var.iso_checksum}"
   iso_url          = "${var.iso_url}"
   boot_wait        = "3s"                            # NOTE This needs to be set as Windows takes longer to finish initialization
-  shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
   boot_command = [
     "<enter><enter>"
   ]
@@ -64,12 +66,12 @@ source "vmware-iso" "win10-iso" {
   }
 
   # Machine information
-  vm_name           = "${var.os_name}"
+  vm_name           = "${var.vm_name}"
   cpus              = "2"
-  memory            = "6192"
   cores             = "2"
-  disk_adapter_type = "lsisas1068"
+  memory            = "6192"
   disk_size         = "61440"
+  disk_adapter_type = "lsisas1068"
   guest_os_type     = "${var.guest_os_type}"
   headless          = true
   usb               = true
@@ -78,51 +80,29 @@ source "vmware-iso" "win10-iso" {
     "./Scripts/Set-NetworkTypeToPrivate.ps1",
     "./Scripts/Set-WinRMSettings.ps1"
   ]
-  cd_label = "cidata"
+  cd_label        = "cidata"
+  skip_compaction = false
 }
 
-source "vmware-vmx" "win10-vmx" {
-
-  # WinRM connection information
-  communicator     = "winrm"
-  shutdown_timeout = "1h"
-  winrm_timeout    = "30m"
-  winrm_username   = "${var.winrm_username}"
-  winrm_password   = "${var.winrm_password}"
-  vm_name          = "${var.os_name}"
-  headless         = true
-}
-
-# Unpack and Setup Image
+# Unpack and Provision Image
 build {
-  name = "step1"
+  name = "gold"
   source "sources.vmware-iso.win10-iso" {
-    output_directory = "output/step-1/"
+    output_directory = var.output_directory
+	shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
   }
-}
-
-# Provision Image
-# NOTE: OEM customizations and security settings
-build {
-  name = "step2"
-  source "sources.vmware-vmx.win10-vmx" {
-    source_path      = "output/step-1/${var.os_name}.vmx"
-    output_directory = "output/step-2/"
-	shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  }
-
   provisioner "file" {
-    source      = "Floppy/Images/wallpapers"
+    source      = "Resources/Images/wallpapers"
     destination = "C:/windows/web/wallpaper/Better-Images"
   }
 
   provisioner "file" {
-    source      = "Floppy/Images/users"
+    source      = "Resources/Images/users"
     destination = "C:/windows/web/wallpaper/Better-Images"
   }
 
   provisioner "file" {
-    source      = "Floppy/DoD_Root_Certificates.p7b"
+    source      = "Resources/DoD_Root_Certificates.p7b"
     destination = "C:/windows/Temp/DoD_Root_Certificates.p7b"
   }
 
@@ -169,7 +149,7 @@ build {
   provisioner "powershell" {
     inline = [
       "Write-Host 'INFO: Installing DoD Root Certificates...'",
-	  "Import-Certificate -FilePath \"$env:Windir/Temp/DoD_Root_Certificates.p7b\" -CertStoreLocation Cert:/LocalMachine/Root"
+      "Import-Certificate -FilePath \"$env:Windir/Temp/DoD_Root_Certificates.p7b\" -CertStoreLocation Cert:/LocalMachine/Root"
     ]
   }
 
@@ -181,7 +161,7 @@ build {
       "./Scripts/Debloat-Windows.ps1",
       "./Scripts/Uninstall-OneDrive.ps1",
       "./Scripts/Set-TLSSecureConfig.ps1",
-	  "./Scripts/Enable-RemoteDesktop.ps1",
+      "./Scripts/Enable-RemoteDesktop.ps1",
       "./Scripts/DSC/LocalDSCConfig.ps1",
       "./Scripts/DSC/DotNetFrameworkConfiguration.ps1",
       "./Scripts/DSC/MicrosoftEdgeConfiguration.ps1",
@@ -213,17 +193,6 @@ build {
     ]
   }
 
-}
-
-# Update Image
-build {
-  name = "step3"
-  source "sources.vmware-vmx.win10-vmx" {
-    source_path      = "output/step-2/${var.os_name}.vmx"
-    output_directory = "output/step-3/"
-	shutdown_command = "shutdown /s /t 10 /f /d p:4:1" # Graceful shutdown
-  }
-
   # Update help information for powershell cmdlets
   provisioner "powershell" {
     inline = [
@@ -242,28 +211,17 @@ build {
     ]
     update_limit = 25
   }
-}
-
-# Finalize Image
-build {
-  name = "step4"
-  source "sources.vmware-vmx.win10-vmx" {
-    source_path                    = "output/step-3/${var.os_name}.vmx"
-    output_directory               = "output/step-4/"
-    vmx_remove_ethernet_interfaces = true
-	shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
-  }
 
   # Setup packer shutdown
   provisioner "file" {
-	source = "Scripts\\Packer-Shutdown.cmd"
-	destination = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
+    source      = "Scripts\\Packer-Shutdown.cmd"
+    destination = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
   }
 
   # Placing SetupComplete
   provisioner "file" {
-	source = "Floppy\\SetupComplete.cmd"
-	destination = "C:\\Windows\\Setup\\Scripts\\SetupComplete.cmd"
+    source      = "Resources\\SetupComplete.cmd"
+    destination = "C:\\Windows\\Setup\\Scripts\\SetupComplete.cmd"
   }
 
   # Defrag cleanup
