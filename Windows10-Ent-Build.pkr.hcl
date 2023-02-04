@@ -86,14 +86,17 @@ source "vmware-iso" "win10-iso" {
   boot_command = [
     "<enter><enter>"
   ]
+  output_directory = "${var.output_directory}/${var.vm_name}"
+  shutdown_timeout = "30m"
+  shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
+#   shutdown_command = "shutdown /s /t 10 /f /d p:4:1"
 }
 
 # Unpack and Provision Image
 build {
   name = "gold"
   source "sources.vmware-iso.win10-iso" {
-    output_directory = "${var.output_directory}/${var.vm_name}"
-    shutdown_command = "C:\\Windows\\Temp\\Packer-Shutdown.cmd"
+
   }
   
   provisioner "file" {
@@ -225,7 +228,7 @@ build {
 
   # Placing SetupComplete
   provisioner "file" {
-    source      = "Resources\\SetupComplete.cmd"
+    source      = "Scripts\\SetupComplete.cmd"
     destination = "C:\\Windows\\Setup\\Scripts\\SetupComplete.cmd"
   }
 
