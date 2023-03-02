@@ -3,5 +3,5 @@ iso_checksum = "sha256:D47D3B05C2B4BB42350D569A7B73DA7559EFE461B0E73CD198716195C
 vm_name = "goldengoose"
 iso_url = "Distros/WindowsEnt.iso"
 output_directory = "f:/Output"
-winrm_username = "fire.keeper"
+winrm_username = "solaire"
 winrm_password = "1qaz2wsx!QAZ@WSX"

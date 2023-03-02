@@ -58,7 +58,7 @@
                         <ModifyPartition wcm:action="add">
                             <Order>4</Order>
                             <PartitionID>4</PartitionID>
-                            <Label>OS</Label>
+                            <Label>Windows</Label>
                             <Letter>C</Letter>
                             <Format>NTFS</Format>
                         </ModifyPartition>
@@ -68,10 +68,11 @@
             <UserData>
                 <AcceptEula>true</AcceptEula>
                 <FullName>Systems Administrator</FullName>
-                <Organization>Kobe LLC</Organization>
+                <Organization>Lordran</Organization>
                 <ProductKey>
                     <WillShowUI>OnError</WillShowUI>
-                    <Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key>
+					<!-- NPPR9-FWDCX-D2C8J-H872K-2YT43 -->
+                    <Key>D7H8N-GGJ9X-88R9H-4G8PX-M98WR</Key>
                 </ProductKey>
             </UserData>
             <ImageInstall>
@@ -111,19 +112,19 @@
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>MQBxAGEAegAyAHcAcwB4ACEAUQBBAFoAQABXAFMAWABBAGQAbQBpAG4AaQBzAHQAcgBhAHQAbwByAFAAYQBzAHMAdwBvAHIAZAA=</Value>
-                    <PlainText>false</PlainText>
+                    <Value>1qaz2wsx!QAZ@WSX</Value>
+                    <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>MQBxAGEAegAyAHcAcwB4ACEAUQBBAFoAQABXAFMAWABQAGEAcwBzAHcAbwByAGQA</Value>
-                            <PlainText>false</PlainText>
+                            <Value>1qaz2wsx!QAZ@WSX</Value>
+                            <PlainText>true</PlainText>
                         </Password>
                         <Description>Break glass emergency account</Description>
-                        <DisplayName>fire.keeper</DisplayName>
+                        <DisplayName>Solaire</DisplayName>
                         <Group>administrators</Group>
-                        <Name>fire.keeper</Name>
+                        <Name>Solaire</Name>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
@@ -134,10 +135,10 @@
             </OOBE>
             <AutoLogon>
                 <Password>
-                    <Value>MQBxAGEAegAyAHcAcwB4ACEAUQBBAFoAQABXAFMAWABQAGEAcwBzAHcAbwByAGQA</Value>
-                    <PlainText>false</PlainText>
+                    <Value>1qaz2wsx!QAZ@WSX</Value>
+                    <PlainText>true</PlainText>
                 </Password>
-                <Username>fire.keeper</Username>
+                <Username>Solaire</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>
@@ -165,23 +166,28 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateFileSizePercent /t REG_DWORD /d 0 /f</CommandLine>
+                    <CommandLine>powershell -File "e:\Install-VMwareTools.ps1"</CommandLine>
                     <Order>5</Order>
+                    <Description>Install VMware-Tools</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateFileSizePercent /t REG_DWORD /d 0 /f</CommandLine>
+                    <Order>6</Order>
                     <Description>Zero Hibernation File</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\Control\Power\ /v HibernateEnabled /t REG_DWORD /d 0 /f</CommandLine>
-                    <Order>6</Order>
+                    <Order>7</Order>
                     <Description>Disable Hibernation Mode</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "1qaz2wsx!QAZ@WSX" /f</CommandLine>
-                    <Order>7</Order>
+                    <Order>8</Order>
                     <Description>Enable AutoLogon</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>%SystemRoot%\System32\reg.exe ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f</CommandLine>
-                    <Order>8</Order>
+                    <Order>9</Order>
                     <Description>Enable AutoLogon</Description>
                 </SynchronousCommand>
             </FirstLogonCommands>
@@ -208,10 +214,11 @@
             <ComputerName>goldengoose</ComputerName>
             <TimeZone>Eastern Standard Time</TimeZone>
             <RegisteredOwner />
-            <RegisteredOrganization>Kobe Co.</RegisteredOrganization>
+            <RegisteredOrganization>Lordran</RegisteredOrganization>
         </component>
         <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SkipAutoActivation>false</SkipAutoActivation>
         </component>
     </settings>
+    <cpi:offlineImage cpi:source="" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
